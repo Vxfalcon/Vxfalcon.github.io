@@ -314,7 +314,7 @@
   <div class="wrap">
     <div class="hero-eyebrow"><span class="blink"></span> AVAILABLE FOR MINECRAFT DEV WORK</div>
     <h1>Minecraft developer building <span class="mark-text">tools, plugins, and anti-cheat systems.</span></h1>
-    <p class="lede">I work on the server side of Minecraft — custom plugins, anti-cheat, and the internal tooling that makes running a real server less painful. Currently building MC Forge, a visual custom-item and ability generator for Paper.</p>
+    <p class="lede">I build server-side Minecraft systems end-to-end — anti-cheat, economy and event frameworks, class/ability RPG mechanics, custom items and resource packs, and the tooling that ties it all together. Currently building MC Forge, a visual custom-item and ability generator for Paper.</p>
     <div class="hero-actions">
       <a class="btn btn-primary" href="#work">See my work</a>
       <a class="btn btn-ghost" href="https://github.com/Vxfalcon" target="_blank" rel="noopener">GitHub profile</a>
@@ -393,11 +393,11 @@
             <div class="work-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 6 7-3 7 3-7 3-7-3Z"/><path d="m5 12 7 3 7-3"/><path d="m5 18 7 3 7-3"/></svg>
             </div>
-            <div class="work-title">MoneySMP</div>
+            <div class="work-title">MoneySMP <span style="color:var(--text3);font-weight:500;font-size:13px">(recreation)</span></div>
           </div>
           <div class="badge-row"><span class="badge badge-outline">Private</span></div>
         </div>
-        <p class="work-desc">A complete custom SMP server build by Truesight / Vx.Falcon — economy, live-run events, a full RPG-style ability system, and a matching resource pack, all designed and built end-to-end rather than assembled from existing plugins.</p>
+        <p class="work-desc">I didn't design the original MoneySMP server — this is a from-scratch recreation of its systems, reimplemented independently as Truesight / Vx.Falcon: economy, live-run events, a full RPG-style ability system, and a matching resource pack, all rebuilt end-to-end rather than assembled from existing plugins.</p>
         <div class="tag-row" style="margin-bottom:16px">
           <span class="tag" style="border-color:var(--white);color:var(--white)">CUSTOM ITEMS</span>
           <span class="tag" style="border-color:var(--white);color:var(--white)">FULL TEXTURE PACK WORK</span>
@@ -415,6 +415,32 @@
           <span class="tag">SQLITE</span>
           <span class="tag">CUSTOM ITEM MODELS</span>
           <span class="tag">RESOURCE PACKS</span>
+        </div>
+      </article>
+
+      <article class="work-card">
+        <div class="work-card-top">
+          <div class="work-title-row">
+            <div class="work-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V12"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4a2 2 0 0 0 1-1.73Z"/><path d="M3.3 7 12 12l8.7-5"/></svg>
+            </div>
+            <div class="work-title">Alter</div>
+          </div>
+          <div class="badge-row"><span class="badge badge-outline">Private</span></div>
+        </div>
+        <p class="work-desc">A revival-altar / limited-lives plugin — running out of lives isn't an instant permadeath, it's a ritual other players can actually attempt to save you from.</p>
+        <ul class="work-points">
+          <li>Players start with a configurable pool of lives (starting / max / "legendary" tiers); running out is consequential but recoverable</li>
+          <li>Death turns the player's head into a revival focus that can be retrieved and placed inside a staff-defined altar zone (corner-marked bounding box plus a center block)</li>
+          <li>Placing it starts a timed ritual — the head floats and slowly rotates while players hold the zone, with progress broadcasts at intervals; leave the zone empty and the ritual cancels, dropping the head back out</li>
+          <li>ProtocolLib drives the floating/rotating head effect; a PlaceholderAPI integration surfaces lives as hearts in other plugins' scoreboards and tab lists</li>
+          <li>Carries a small shared ability subset (Berserker, Executioner, Poseidon, Titan) — an earlier iteration of the same class-ability idea that grew into MoneySMP's full 11-class system</li>
+        </ul>
+        <div class="tag-row">
+          <span class="tag">JAVA</span>
+          <span class="tag">PAPER API</span>
+          <span class="tag">PROTOCOLLIB</span>
+          <span class="tag">PLACEHOLDERAPI</span>
         </div>
       </article>
 
@@ -436,6 +462,8 @@
           <span class="stack-pill">Paper / Spigot</span>
           <span class="stack-pill">Fabric</span>
           <span class="stack-pill">Mixins</span>
+          <span class="stack-pill">ProtocolLib</span>
+          <span class="stack-pill">PlaceholderAPI</span>
         </div>
       </div>
       <div>
