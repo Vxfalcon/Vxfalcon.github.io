@@ -5,36 +5,26 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TrueSight — Minecraft Developer</title>
 <meta name="description" content="Minecraft developer — anti-cheat systems, server plugins, and dev tooling.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' fill='black'/%3E%3Cpath d='M12 1a11 11 0 1 0 0 22Z' fill='white'/%3E%3Ccircle cx='12' cy='12' r='11' fill='none' stroke='white' stroke-width='1.2'/%3E%3C/svg%3E">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap');
 
   :root {
-    --bg:        #0f1117;
-    --surface:   #181c27;
-    --surface2:  #1e2333;
-    --surface3:  #252c40;
-    --border:    rgba(255,255,255,0.07);
-    --border2:   rgba(255,255,255,0.13);
-    --green:     #4ade80;
-    --green-dim: rgba(74,222,128,0.12);
-    --green-glow:rgba(74,222,128,0.25);
-    --purple:    #a78bfa;
-    --purple-dim:rgba(167,139,250,0.12);
-    --gold:      #fbbf24;
-    --gold-dim:  rgba(251,191,36,0.12);
-    --red:       #f87171;
-    --red-dim:   rgba(248,113,113,0.12);
-    --text:      #e2e8f0;
-    --text2:     #94a3b8;
-    --text3:     #64748b;
+    --bg:        #000000;
+    --surface:   #060606;
+    --surface2:  #0c0c0c;
+    --border:    rgba(255,255,255,0.14);
+    --border2:   rgba(255,255,255,0.32);
+    --white:     #ffffff;
+    --text:      #f5f5f5;
+    --text2:     #9a9a9a;
+    --text3:     #5c5c5c;
     --mono:      'JetBrains Mono', monospace;
     --sans:      'Inter', sans-serif;
-    --radius:    6px;
-    --radius-lg: 10px;
+    --radius:    2px;
   }
 
   * , *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   html { scroll-behavior: smooth; }
 
   body {
@@ -45,129 +35,116 @@
     min-height: 100vh;
   }
 
-  ::selection { background: var(--green-dim); color: var(--text); }
-
+  ::selection { background: #fff; color: #000; }
   ::-webkit-scrollbar { width: 8px; height: 8px; }
   ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb { background: var(--border); }
   ::-webkit-scrollbar-thumb:hover { background: var(--border2); }
 
   a { color: inherit; text-decoration: none; }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 1.5rem; }
 
-  .wrap { max-width: 980px; margin: 0 auto; padding: 0 1.5rem; }
+  /* ── Brand mark ── a bisected circle: solid on one side, outline on the
+     other. The whole site's black/white duality distilled into one glyph,
+     used as the logo and (inline) the favicon. */
+  .mark { display: block; flex-shrink: 0; }
 
   /* ── Nav ── */
   .site-nav {
     position: sticky;
     top: 0;
     z-index: 50;
-    background: rgba(15,17,23,0.85);
-    backdrop-filter: blur(10px);
+    background: rgba(0,0,0,0.88);
+    backdrop-filter: blur(8px);
     border-bottom: 1px solid var(--border);
-  }
-  .site-nav::after {
-    content: '';
-    position: absolute;
-    left: 0; right: 0; bottom: -1px;
-    height: 2px;
-    background: linear-gradient(90deg, var(--green), var(--purple) 45%, transparent 85%);
-    opacity: .45;
-    pointer-events: none;
   }
   .nav-inner {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 60px;
+    height: 62px;
   }
   .nav-brand {
     display: flex;
     align-items: center;
-    gap: 9px;
+    gap: 10px;
     font-weight: 700;
-    font-size: 15px;
-    letter-spacing: -0.01em;
-  }
-  .nav-brand .dot {
-    width: 9px; height: 9px;
-    border-radius: 50%;
-    background: var(--green);
-    box-shadow: 0 0 8px var(--green-glow);
+    font-size: 14.5px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    font-family: var(--mono);
   }
   .nav-links {
     display: flex;
     align-items: center;
-    gap: 26px;
-    font-size: 13.5px;
+    gap: 30px;
+    font-size: 13px;
+    font-family: var(--mono);
+  }
+  .nav-links a.nav-text-link {
     color: var(--text2);
-    font-weight: 500;
-  }
-  .nav-links a { transition: color .15s ease; }
-  .nav-links a:hover { color: var(--text); }
-  .nav-links .nav-gh {
-    display: flex; align-items: center; gap: 6px;
-    background: var(--surface2);
-    border: 1px solid var(--border2);
-    padding: 6px 12px;
-    border-radius: var(--radius);
-    color: var(--text);
-    transition: border-color .15s ease;
-  }
-  .nav-links .nav-gh:hover { border-color: var(--green); }
-  .nav-links .nav-gh svg { width: 15px; height: 15px; }
-
-  /* ── Hero ── */
-  .hero {
-    padding: 6.5rem 0 5rem;
+    letter-spacing: 0.03em;
+    transition: color .15s ease;
     position: relative;
   }
+  .nav-links a.nav-text-link:hover { color: var(--white); }
+  .nav-links a.nav-text-link::before { content: '// '; color: var(--text3); }
+  .nav-links .nav-gh {
+    display: flex; align-items: center; gap: 7px;
+    border: 1px solid var(--border2);
+    padding: 7px 14px;
+    color: var(--white);
+    font-size: 12.5px;
+    font-weight: 600;
+    transition: background .15s ease, color .15s ease;
+  }
+  .nav-links .nav-gh:hover { background: var(--white); color: #000; }
+  .nav-links .nav-gh svg { width: 14px; height: 14px; }
+
+  /* ── Hero ── */
+  .hero { padding: 7rem 0 5.5rem; }
   .hero-eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
     font-family: var(--mono);
     font-size: 12px;
-    color: var(--green);
-    background: var(--green-dim);
-    border: 1px solid rgba(74,222,128,0.25);
-    padding: 5px 12px;
-    border-radius: 20px;
-    margin-bottom: 22px;
+    letter-spacing: 0.08em;
+    color: var(--text2);
+    display: flex; align-items: center; gap: 9px;
+    margin-bottom: 26px;
     opacity: 0;
     animation: rise .5s ease forwards;
   }
   .hero-eyebrow .blink {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: var(--green);
-    animation: pulse 1.8s ease-in-out infinite;
+    width: 7px; height: 7px;
+    background: var(--white);
+    animation: pulse 1.6s ease-in-out infinite;
   }
-  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .2; } }
   .hero h1 {
-    font-size: clamp(2.1rem, 5vw, 3.1rem);
+    font-size: clamp(2.15rem, 5vw, 3.2rem);
     font-weight: 800;
     letter-spacing: -0.02em;
-    line-height: 1.12;
-    max-width: 760px;
+    line-height: 1.15;
+    max-width: 740px;
     opacity: 0;
     animation: rise .55s ease .08s forwards;
   }
-  .hero h1 .accent {
-    background: linear-gradient(120deg, var(--green), var(--purple));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+  .hero h1 .mark-text {
+    background: var(--white);
+    color: #000;
+    padding: 0 8px;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
   }
   .hero p.lede {
-    margin-top: 22px;
+    margin-top: 24px;
     font-size: 16.5px;
     color: var(--text2);
-    max-width: 600px;
+    max-width: 580px;
     opacity: 0;
     animation: rise .55s ease .16s forwards;
   }
   .hero-actions {
-    margin-top: 34px;
+    margin-top: 36px;
     display: flex;
     gap: 12px;
     flex-wrap: wrap;
@@ -182,181 +159,132 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 11px 20px;
+    padding: 12px 22px;
     border-radius: var(--radius);
-    font-size: 13.5px;
+    font-size: 13px;
     font-weight: 600;
-    font-family: var(--sans);
+    font-family: var(--mono);
+    letter-spacing: 0.02em;
     cursor: pointer;
     transition: all .15s ease;
     border: 1px solid transparent;
   }
-  .btn-primary {
-    background: var(--green);
-    color: #0f1117;
-  }
-  .btn-primary:hover { background: #86efac; transform: translateY(-1px); box-shadow: 0 4px 14px var(--green-glow); }
-  .btn-ghost {
-    background: transparent;
-    border-color: var(--border2);
-    color: var(--text2);
-  }
-  .btn-ghost:hover { color: var(--text); border-color: var(--green); transform: translateY(-1px); }
+  .btn-primary { background: var(--white); color: #000; }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(255,255,255,0.12); }
+  .btn-ghost { background: transparent; border-color: var(--border2); color: var(--text); }
+  .btn-ghost:hover { background: rgba(255,255,255,0.06); border-color: var(--white); }
 
   /* ── Section shell ── */
   section { padding: 4.5rem 0; }
-  .section-head { margin-bottom: 2.2rem; }
-  .section-kicker {
-    font-family: var(--mono);
-    font-size: 12px;
-    color: var(--text3);
-    text-transform: uppercase;
-    letter-spacing: .08em;
-    margin-bottom: 8px;
-  }
+  .section-head { margin-bottom: 2.4rem; display: flex; align-items: baseline; gap: 14px; }
+  .section-num { font-family: var(--mono); font-size: 13px; color: var(--text3); }
   .section-head h2 {
-    font-size: 1.65rem;
+    font-size: 1.6rem;
     font-weight: 700;
     letter-spacing: -0.01em;
   }
+  .section-rule { flex: 1; height: 1px; background: var(--border); }
 
-  .reveal {
-    opacity: 0;
-    transform: translateY(16px);
-    transition: opacity .5s ease, transform .5s ease;
-  }
+  .reveal { opacity: 0; transform: translateY(16px); transition: opacity .5s ease, transform .5s ease; }
   .reveal.in-view { opacity: 1; transform: translateY(0); }
 
   /* ── Work cards ── */
-  .work-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 18px;
-  }
-  .work-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 1.75rem;
-    transition: border-color .18s ease, transform .18s ease;
-  }
-  .work-card:hover { border-color: var(--border2); transform: translateY(-2px); }
+  .work-grid { display: grid; grid-template-columns: 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); }
+  .work-card { background: var(--bg); padding: 2rem; transition: background .18s ease; }
+  .work-card:hover { background: var(--surface2); }
   .work-card-top {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
     gap: 16px;
     flex-wrap: wrap;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
   }
-  .work-title-row { display: flex; align-items: center; gap: 12px; }
+  .work-title-row { display: flex; align-items: center; gap: 14px; }
   .work-icon {
     width: 38px; height: 38px;
-    border-radius: 9px;
+    border: 1px solid var(--border2);
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
+    color: var(--white);
   }
-  .work-icon svg { width: 19px; height: 19px; }
-  .work-title { font-size: 17px; font-weight: 700; }
+  .work-icon svg { width: 18px; height: 18px; }
+  .work-title { font-size: 17px; font-weight: 700; letter-spacing: -0.005em; }
+  .badge-row { display: flex; gap: 8px; flex-wrap: wrap; }
   .badge {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
     font-family: var(--mono);
     font-size: 10.5px;
     font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
     padding: 4px 9px;
-    border-radius: 20px;
+    border-radius: var(--radius);
     white-space: nowrap;
   }
-  .badge-commercial { background: var(--gold-dim); color: var(--gold); border: 1px solid rgba(251,191,36,0.3); }
-  .badge-private { background: var(--surface3); color: var(--text2); border: 1px solid var(--border2); }
-  .badge-discontinued { background: var(--red-dim); color: var(--red); border: 1px solid rgba(248,113,113,0.3); }
-  .work-desc { color: var(--text2); font-size: 14.5px; margin-bottom: 14px; }
-  .work-points {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-bottom: 16px;
-  }
+  .badge-solid { background: var(--white); color: #000; }
+  .badge-outline { border: 1px solid var(--border2); color: var(--text2); }
+  .badge-dim { border: 1px dashed var(--border); color: var(--text3); }
+  .work-desc { color: var(--text2); font-size: 14.5px; margin-bottom: 16px; }
+  .work-points { list-style: none; display: flex; flex-direction: column; gap: 9px; margin-bottom: 18px; }
   .work-points li {
-    display: flex;
-    gap: 9px;
+    display: flex; gap: 10px;
     font-size: 13.5px;
     color: var(--text2);
     line-height: 1.55;
   }
   .work-points li::before {
-    content: '';
-    width: 5px; height: 5px;
-    border-radius: 50%;
-    background: var(--text3);
+    content: '–';
+    color: var(--text3);
     flex-shrink: 0;
-    margin-top: 8px;
+    font-family: var(--mono);
   }
-  .tag-row { display: flex; flex-wrap: wrap; gap: 7px; }
+  .tag-row { display: flex; flex-wrap: wrap; gap: 8px; }
   .tag {
     font-family: var(--mono);
     font-size: 11px;
-    color: var(--text3);
-    background: var(--surface2);
+    color: var(--text2);
     border: 1px solid var(--border);
     padding: 3px 9px;
     border-radius: var(--radius);
   }
 
   /* ── Stack ── */
-  .stack-groups { display: flex; flex-direction: column; gap: 20px; }
+  .stack-groups { display: flex; flex-direction: column; gap: 24px; }
   .stack-group-label {
     font-family: var(--mono);
     font-size: 11.5px;
     color: var(--text3);
     text-transform: uppercase;
-    letter-spacing: .06em;
-    margin-bottom: 10px;
+    letter-spacing: .08em;
+    margin-bottom: 12px;
   }
-  .stack-pills { display: flex; flex-wrap: wrap; gap: 9px; }
+  .stack-pills { display: flex; flex-wrap: wrap; gap: 10px; }
   .stack-pill {
-    display: flex; align-items: center; gap: 8px;
-    background: var(--surface);
+    display: flex; align-items: center;
     border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 7px 14px 7px 10px;
+    border-radius: var(--radius);
+    padding: 8px 16px;
     font-size: 13px;
     font-weight: 500;
-    transition: border-color .15s ease, transform .15s ease;
+    transition: border-color .15s ease, background .15s ease;
   }
-  .stack-pill:hover { border-color: var(--border2); transform: translateY(-1px); }
-  .stack-pill .swatch { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .stack-pill:hover { border-color: var(--border2); background: var(--surface2); }
 
   /* ── Footer ── */
-  footer {
-    border-top: 1px solid var(--border);
-    padding: 2.5rem 0 3rem;
-  }
-  .footer-inner {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 16px;
-  }
-  .footer-note { color: var(--text3); font-size: 13px; }
-  .footer-links { display: flex; gap: 18px; }
-  .footer-links a {
-    color: var(--text2);
-    font-size: 13px;
-    display: flex; align-items: center; gap: 6px;
-    transition: color .15s ease;
-  }
-  .footer-links a:hover { color: var(--green); }
+  footer { border-top: 1px solid var(--border); padding: 2.5rem 0 3rem; }
+  .footer-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+  .footer-note { color: var(--text3); font-size: 13px; font-family: var(--mono); }
+  .footer-links { display: flex; gap: 20px; }
+  .footer-links a { color: var(--text2); font-size: 13px; display: flex; align-items: center; gap: 6px; transition: color .15s ease; }
+  .footer-links a:hover { color: var(--white); }
   .footer-links svg { width: 15px; height: 15px; }
 
   @media (max-width: 640px) {
-    .nav-links { gap: 16px; }
-    .nav-links span.nav-text-link { display: none; }
-    .hero { padding: 4.5rem 0 3rem; }
+    .nav-links { gap: 18px; }
+    .nav-links a.nav-text-link { display: none; }
+    .hero { padding: 5rem 0 3rem; }
   }
 </style>
 </head>
@@ -364,10 +292,16 @@
 
 <nav class="site-nav">
   <div class="wrap nav-inner">
-    <div class="nav-brand"><span class="dot"></span> TrueSight</div>
+    <div class="nav-brand">
+      <svg class="mark" viewBox="0 0 24 24" width="17" height="17">
+        <path d="M12 1a11 11 0 1 0 0 22Z" fill="#fff"/>
+        <circle cx="12" cy="12" r="11" fill="none" stroke="#fff" stroke-width="1.2"/>
+      </svg>
+      TrueSight
+    </div>
     <div class="nav-links">
-      <span class="nav-text-link"><a href="#work">Work</a></span>
-      <span class="nav-text-link"><a href="#stack">Stack</a></span>
+      <a class="nav-text-link" href="#work">work</a>
+      <a class="nav-text-link" href="#stack">stack</a>
       <a class="nav-gh" href="https://github.com/Vxfalcon" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.5 5.73.5 12c0 5.09 3.29 9.4 7.86 10.93.58.1.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.88-1.54-3.88-1.54-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.7.08-.7 1.17.08 1.78 1.2 1.78 1.2 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.55-.29-5.23-1.28-5.23-5.68 0-1.25.45-2.28 1.19-3.08-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.64 1.59.24 2.76.12 3.05.74.8 1.18 1.83 1.18 3.08 0 4.41-2.69 5.38-5.25 5.67.41.36.78 1.08.78 2.17 0 1.56-.01 2.82-.01 3.2 0 .32.21.67.8.56C20.71 21.39 24 17.08 24 12 24 5.73 18.27.5 12 .5Z"/></svg>
         GitHub
@@ -378,8 +312,8 @@
 
 <header class="hero">
   <div class="wrap">
-    <div class="hero-eyebrow"><span class="blink"></span> Open to Minecraft dev work</div>
-    <h1>Minecraft developer building <span class="accent">tools, plugins, and anti-cheat systems.</span></h1>
+    <div class="hero-eyebrow"><span class="blink"></span> AVAILABLE FOR MINECRAFT DEV WORK</div>
+    <h1>Minecraft developer building <span class="mark-text">tools, plugins, and anti-cheat systems.</span></h1>
     <p class="lede">I work on the server side of Minecraft — custom plugins, anti-cheat, and the internal tooling that makes running a real server less painful. Currently building MC Forge, a visual custom-item and ability generator for Paper.</p>
     <div class="hero-actions">
       <a class="btn btn-primary" href="#work">See my work</a>
@@ -391,21 +325,22 @@
 <section id="work">
   <div class="wrap">
     <div class="section-head reveal">
-      <div class="section-kicker">Featured</div>
+      <span class="section-num">01</span>
       <h2>What I've built</h2>
+      <div class="section-rule"></div>
     </div>
 
-    <div class="work-grid">
+    <div class="work-grid reveal">
 
-      <article class="work-card reveal">
+      <article class="work-card">
         <div class="work-card-top">
           <div class="work-title-row">
-            <div class="work-icon" style="background:var(--green-dim);color:var(--green)">
+            <div class="work-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4a2 2 0 0 0 1-1.73Z"/><path d="M3.3 7 12 12l8.7-5"/><path d="M12 22V12"/></svg>
             </div>
             <div class="work-title">MC Forge</div>
           </div>
-          <span class="badge badge-commercial">Commercial</span>
+          <div class="badge-row"><span class="badge badge-solid">Commercial</span></div>
         </div>
         <p class="work-desc">A desktop tool for building custom Minecraft items end-to-end — import a Blockbench model, wire up abilities from a library of 100+ built-in effect presets, configure crafting recipes and NBT data, and export a ready-to-drop Paper plugin plus matching resource pack.</p>
         <ul class="work-points">
@@ -414,23 +349,23 @@
           <li>Actively developed and sold as a paid tool, so the source isn't public</li>
         </ul>
         <div class="tag-row">
-          <span class="tag">Java</span>
-          <span class="tag">Paper API</span>
-          <span class="tag">Electron</span>
+          <span class="tag">JAVA</span>
+          <span class="tag">PAPER API</span>
+          <span class="tag">ELECTRON</span>
         </div>
       </article>
 
-      <article class="work-card reveal">
+      <article class="work-card">
         <div class="work-card-top">
           <div class="work-title-row">
-            <div class="work-icon" style="background:var(--purple-dim);color:var(--purple)">
+            <div class="work-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
             </div>
             <div class="work-title">Falconia Anticheat</div>
           </div>
-          <div style="display:flex;gap:8px">
-            <span class="badge badge-private">Private</span>
-            <span class="badge badge-discontinued">Discontinued</span>
+          <div class="badge-row">
+            <span class="badge badge-outline">Private</span>
+            <span class="badge badge-dim">Discontinued</span>
           </div>
         </div>
         <p class="work-desc">A manual-inspection anti-cheat built for the Falconia Factions server: a required Fabric client mod ("Truesight") that reports into a self-hostable admin panel, so staff can actually look at what's running on a suspicious player's machine instead of trusting a black-box verdict.</p>
@@ -443,29 +378,29 @@
           <li>Shipped for Minecraft 1.21.1–1.21.11 before being discontinued after a security incident on my machine</li>
         </ul>
         <div class="tag-row">
-          <span class="tag">Fabric</span>
-          <span class="tag">Java</span>
-          <span class="tag">Node.js</span>
-          <span class="tag">Vite</span>
-          <span class="tag">PostgreSQL</span>
-          <span class="tag">Discord API</span>
+          <span class="tag">FABRIC</span>
+          <span class="tag">JAVA</span>
+          <span class="tag">NODE.JS</span>
+          <span class="tag">VITE</span>
+          <span class="tag">POSTGRESQL</span>
+          <span class="tag">DISCORD API</span>
         </div>
       </article>
 
-      <article class="work-card reveal">
+      <article class="work-card">
         <div class="work-card-top">
           <div class="work-title-row">
-            <div class="work-icon" style="background:var(--surface3);color:var(--text2)">
+            <div class="work-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h3a1 1 0 0 0 1 -1v-1a2 2 0 0 1 4 0v1a1 1 0 0 0 1 1h3a1 1 0 0 1 1 1v3a1 1 0 0 0 1 1h1a2 2 0 0 1 0 4h-1a1 1 0 0 0 -1 1v3a1 1 0 0 1 -1 1h-3a1 1 0 0 1 -1 -1v-1a2 2 0 0 0 -4 0v1a1 1 0 0 1 -1 1h-3a1 1 0 0 1 -1 -1v-3a1 1 0 0 1 1 -1h1a2 2 0 0 0 0 -4h-1a1 1 0 0 1 -1 -1v-3a1 1 0 0 1 1 -1"/></svg>
             </div>
             <div class="work-title">Plugins</div>
           </div>
-          <span class="badge badge-private">Private</span>
+          <div class="badge-row"><span class="badge badge-outline">Private</span></div>
         </div>
         <p class="work-desc">A working collection of Minecraft server plugins and supporting dev tools, built and maintained for real servers rather than as standalone releases.</p>
         <div class="tag-row">
-          <span class="tag">Java</span>
-          <span class="tag">Spigot / Paper</span>
+          <span class="tag">JAVA</span>
+          <span class="tag">SPIGOT / PAPER</span>
         </div>
       </article>
 
@@ -476,33 +411,34 @@
 <section id="stack">
   <div class="wrap">
     <div class="section-head reveal">
-      <div class="section-kicker">Toolbox</div>
+      <span class="section-num">02</span>
       <h2>Stack</h2>
+      <div class="section-rule"></div>
     </div>
     <div class="stack-groups reveal">
       <div>
         <div class="stack-group-label">Minecraft</div>
         <div class="stack-pills">
-          <span class="stack-pill"><span class="swatch" style="background:var(--green)"></span> Paper / Spigot</span>
-          <span class="stack-pill"><span class="swatch" style="background:var(--green)"></span> Fabric</span>
-          <span class="stack-pill"><span class="swatch" style="background:var(--green)"></span> Mixins</span>
+          <span class="stack-pill">Paper / Spigot</span>
+          <span class="stack-pill">Fabric</span>
+          <span class="stack-pill">Mixins</span>
         </div>
       </div>
       <div>
         <div class="stack-group-label">Languages</div>
         <div class="stack-pills">
-          <span class="stack-pill"><span class="swatch" style="background:var(--gold)"></span> Java</span>
-          <span class="stack-pill"><span class="swatch" style="background:var(--gold)"></span> JavaScript</span>
+          <span class="stack-pill">Java</span>
+          <span class="stack-pill">JavaScript</span>
         </div>
       </div>
       <div>
         <div class="stack-group-label">Web &amp; tooling</div>
         <div class="stack-pills">
-          <span class="stack-pill"><span class="swatch" style="background:var(--purple)"></span> Node.js</span>
-          <span class="stack-pill"><span class="swatch" style="background:var(--purple)"></span> Vite</span>
-          <span class="stack-pill"><span class="swatch" style="background:var(--purple)"></span> Electron</span>
-          <span class="stack-pill"><span class="swatch" style="background:var(--purple)"></span> PostgreSQL</span>
-          <span class="stack-pill"><span class="swatch" style="background:var(--purple)"></span> Discord API</span>
+          <span class="stack-pill">Node.js</span>
+          <span class="stack-pill">Vite</span>
+          <span class="stack-pill">Electron</span>
+          <span class="stack-pill">PostgreSQL</span>
+          <span class="stack-pill">Discord API</span>
         </div>
       </div>
     </div>
@@ -511,7 +447,7 @@
 
 <footer>
   <div class="wrap footer-inner">
-    <div class="footer-note">TrueSight — Minecraft developer.</div>
+    <div class="footer-note">TRUESIGHT — MINECRAFT DEVELOPER</div>
     <div class="footer-links">
       <a href="https://github.com/Vxfalcon" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.5 5.73.5 12c0 5.09 3.29 9.4 7.86 10.93.58.1.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.88-1.54-3.88-1.54-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.7.08-.7 1.17.08 1.78 1.2 1.78 1.2 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.55-.29-5.23-1.28-5.23-5.68 0-1.25.45-2.28 1.19-3.08-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.64 1.59.24 2.76.12 3.05.74.8 1.18 1.83 1.18 3.08 0 4.41-2.69 5.38-5.25 5.67.41.36.78 1.08.78 2.17 0 1.56-.01 2.82-.01 3.2 0 .32.21.67.8.56C20.71 21.39 24 17.08 24 12 24 5.73 18.27.5 12 .5Z"/></svg>
@@ -524,7 +460,7 @@
 <script>
   const io = new IntersectionObserver((entries) => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in-view'); });
-  }, { threshold: 0.12 });
+  }, { threshold: 0.1 });
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 </script>
 
