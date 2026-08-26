@@ -44,6 +44,43 @@
   a { color: inherit; text-decoration: none; }
   .wrap { max-width: 960px; margin: 0 auto; padding: 0 1.5rem; }
 
+  /* ── Side rain ──
+     Falls only in the empty margins outside the 960px content column —
+     it physically can't overlap the text, so it needs no z-index games.
+     Mostly thin streaks, with an occasional monospace glyph mixed in for
+     a little "digital rain" texture against the literal rain. Vanishes
+     on its own once the viewport is too narrow to have margins at all. */
+  .rain-col {
+    position: fixed;
+    top: 0; bottom: 0;
+    width: max(0px, calc((100vw - 960px) / 2 - 20px));
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 1;
+  }
+  .rain-col.left { left: 0; }
+  .rain-col.right { right: 0; }
+  .raindrop {
+    position: absolute;
+    top: -12%;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, rgba(255,255,255,var(--op,0.2)) 45%, transparent);
+    animation: rain-fall var(--dur, 5s) linear infinite;
+    animation-delay: var(--delay, 0s);
+  }
+  .raindrop.glyph {
+    width: auto;
+    background: none;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: rgba(255,255,255,var(--op,0.2));
+    line-height: 1;
+  }
+  @keyframes rain-fall {
+    from { transform: translateY(0); }
+    to   { transform: translateY(112vh); }
+  }
+
   /* ── Brand mark ── a bisected circle: solid on one side, outline on the
      other. The whole site's black/white duality distilled into one glyph,
      used as the logo and (inline) the favicon. */
@@ -290,6 +327,9 @@
 </head>
 <body>
 
+<div class="rain-col left" id="rainLeft" aria-hidden="true"></div>
+<div class="rain-col right" id="rainRight" aria-hidden="true"></div>
+
 <nav class="site-nav">
   <div class="wrap nav-inner">
     <div class="nav-brand">
@@ -397,7 +437,7 @@
           </div>
           <div class="badge-row"><span class="badge badge-outline">Private</span></div>
         </div>
-        <p class="work-desc">I didn't design the original MoneySMP server — this is a from-scratch recreation of its systems, reimplemented independently as Truesight / Vx.Falcon: economy, live-run events, a full RPG-style ability system, and a matching resource pack, all rebuilt end-to-end rather than assembled from existing plugins.</p>
+        <p class="work-desc">Money SMP is <a href="https://moneysmp.fandom.com/wiki/Money_SMP_Wiki" target="_blank" rel="noopener" style="color:var(--white);text-decoration:underline">a real, existing series</a> — I didn't design the original, this is a from-scratch recreation of its server systems, reimplemented independently as Truesight / Vx.Falcon.</p>
         <div class="tag-row" style="margin-bottom:16px">
           <span class="tag" style="border-color:var(--white);color:var(--white)">CUSTOM ITEMS</span>
           <span class="tag" style="border-color:var(--white);color:var(--white)">FULL TEXTURE PACK WORK</span>
@@ -405,8 +445,9 @@
         </div>
         <ul class="work-points">
           <li><strong>Custom items &amp; texture pack</strong> — a hand-built resource pack ("MoneySmp Team Badges") using the modern 1.21.4+ component-based item-model system, not legacy CustomModelData overrides: five fully custom team-badge items (Aces, Clubs, Diamonds, Jokers, Spades), each with its own model and texture, feeding directly into the server's team system</li>
-          <li><strong>Ability system</strong> — 11 mythology-themed classes (Poseidon, Berserker, Titan, Executioner, Tempest, Inferno, Phantom, Gaia, Chronos, Nyx, Aether), each with a distinct passive and a multi-stage ultimate (windup → payoff, with matching particle/sound feedback), a per-ability charge economy, a paid reroll system, and an anti-kill-farm safeguard</li>
-          <li><strong>Server framework</strong> — player economy (balances, pay, SQLite-backed auction house, leaderboard), a team + tier system, and eight built-in event modes: Capture the Flag, King of the Hill, Control Points, Egg Hunt, Battle Royale, Natural Disasters, VIP Protection, and generic ranked events with payouts</li>
+          <li><strong>Random Events</strong> — recreated the series' signature system: unpredictable events fire throughout a season and run for a set duration (2 hours in recent seasons), layered on top of the daily team games. Implemented events include <em>Natural Disasters</em> (last team standing wins), <em>VIP Protection</em> (each team guards an assigned VIP while hunting the other's, battle-royale style — last VIP standing wins), and <em>Double Dough</em> (kill payouts doubled for the event's duration)</li>
+          <li><strong>Daily/season game modes</strong> — Capture the Flag, King of the Hill, Capture Points (hold a zone for several minutes to bank a payout), Egg Hunt, Battle Royale finales, and a generic ranked-event mode with configurable payouts and a "gladiator pairs" bracket format</li>
+          <li><strong>Server framework</strong> — player economy (balances, pay, SQLite-backed auction house, leaderboard) and a team + tier system behind it all</li>
           <li>Death/respawn protection with combat tagging, so freshly-spawned players can't be farmed but raid mechanics still work for staff-judged exceptions</li>
         </ul>
         <div class="tag-row">
@@ -434,7 +475,7 @@
           <li>Death turns the player's head into a revival focus that can be retrieved and placed inside a staff-defined altar zone (corner-marked bounding box plus a center block)</li>
           <li>Placing it starts a timed ritual — the head floats and slowly rotates while players hold the zone, with progress broadcasts at intervals; leave the zone empty and the ritual cancels, dropping the head back out</li>
           <li>ProtocolLib drives the floating/rotating head effect; a PlaceholderAPI integration surfaces lives as hearts in other plugins' scoreboards and tab lists</li>
-          <li>Carries a small shared ability subset (Berserker, Executioner, Poseidon, Titan) — an earlier iteration of the same class-ability idea that grew into MoneySMP's full 11-class system</li>
+          <li>Also carries a small class-ability layer (Berserker, Executioner, Poseidon, Titan) — a separate experiment in per-player passive/ultimate abilities, independent of the MoneySMP recreation</li>
         </ul>
         <div class="tag-row">
           <span class="tag">JAVA</span>
@@ -505,6 +546,32 @@
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in-view'); });
   }, { threshold: 0.1 });
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // Side rain — see .rain-col in <style>. Confined to the empty margins
+  // outside the content column, so it's pure decoration and never fights
+  // for space with real text.
+  (function spawnRain() {
+    const glyphs = ['0', '1', '/', '\\', '.', '+', '·'];
+    const cols = [document.getElementById('rainLeft'), document.getElementById('rainRight')];
+    cols.forEach(col => {
+      if (!col) return;
+      for (let i = 0; i < 18; i++) {
+        const drop = document.createElement('div');
+        const isGlyph = i % 5 === 0;
+        drop.className = 'raindrop' + (isGlyph ? ' glyph' : '');
+        drop.style.left = (Math.random() * 100).toFixed(1) + '%';
+        drop.style.setProperty('--dur', (3 + Math.random() * 5).toFixed(2) + 's');
+        drop.style.setProperty('--delay', (Math.random() * -8).toFixed(2) + 's');
+        drop.style.setProperty('--op', (0.08 + Math.random() * 0.22).toFixed(2));
+        if (isGlyph) {
+          drop.textContent = glyphs[Math.floor(Math.random() * glyphs.length)];
+        } else {
+          drop.style.height = (40 + Math.random() * 90).toFixed(0) + 'px';
+        }
+        col.appendChild(drop);
+      }
+    });
+  })();
 </script>
 
 </body>
