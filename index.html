@@ -475,13 +475,39 @@
           <li>Death turns the player's head into a revival focus that can be retrieved and placed inside a staff-defined altar zone (corner-marked bounding box plus a center block)</li>
           <li>Placing it starts a timed ritual — the head floats and slowly rotates while players hold the zone, with progress broadcasts at intervals; leave the zone empty and the ritual cancels, dropping the head back out</li>
           <li>ProtocolLib drives the floating/rotating head effect; a PlaceholderAPI integration surfaces lives as hearts in other plugins' scoreboards and tab lists</li>
-          <li>Also carries a small class-ability layer (Berserker, Executioner, Poseidon, Titan) — a separate experiment in per-player passive/ultimate abilities, independent of the MoneySMP recreation</li>
+          <li>Also carries a small class-ability layer (Berserker, Executioner, Poseidon, Titan) — an earlier, smaller take on the same class-ability idea, later fully realized in the standalone Abilities plugin below</li>
         </ul>
         <div class="tag-row">
           <span class="tag">JAVA</span>
           <span class="tag">PAPER API</span>
           <span class="tag">PROTOCOLLIB</span>
           <span class="tag">PLACEHOLDERAPI</span>
+        </div>
+      </article>
+
+      <article class="work-card">
+        <div class="work-card-top">
+          <div class="work-title-row">
+            <div class="work-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14Z"/></svg>
+            </div>
+            <div class="work-title">Abilities</div>
+          </div>
+          <div class="badge-row"><span class="badge badge-outline">Private</span></div>
+        </div>
+        <p class="work-desc">A standalone class/progression plugin, independent of the MoneySMP recreation — on first join, every player is randomly assigned one of 11 mythology-themed classes, each with its own passive and a multi-stage ultimate.</p>
+        <ul class="work-points">
+          <li><strong>11 classes</strong>, each with a themed passive → ultimate pair: Poseidon (Tidal Grace → Tsunami), Berserker (Bloodlust → Rampage), Titan (Stoneskin → Titan's Wrath), Executioner (Marked for Death → Execution), Tempest (Windswept → Eye of the Storm), Inferno (Scorched Body → Inferno), Phantom (Fading Step → Spectral Form), Gaia (Overgrowth → Wrath of Gaia), Chronos (Rewind Thread → Time Reversal), Nyx (Nightwalker → Eternal Night), Aether (Celestial Ward → Ascension)</li>
+          <li>Passives are environment- and state-aware, not flat stat buffs — Poseidon speeds up near water, Berserker's Strength scales as health drops, Gaia only regenerates on natural terrain, Nyx gets bonus Speed/Regeneration specifically at night</li>
+          <li>Ultimates are multi-stage sequences (windup → payoff, sometimes a delayed finisher) with matching particle rings/spirals and sound cues rather than an instant stat burst, triggered via shift + swap-hands with <code>/ultimate</code> as a fallback</li>
+          <li>A charge-based resource system — kills grant charges (each ability costs 4–7 to activate its ultimate), with a 300-second anti-farm cooldown so repeatedly killing the same player for charges doesn't pay out</li>
+          <li>A paid, excludable reroll system (defaults to 3 diamonds) for players who want to change their randomly-assigned class</li>
+          <li>Action bar + scoreboard-sidebar HUD showing live ability/charge status, plus a full GUI for browsing what every ability's passive and ultimate actually do</li>
+        </ul>
+        <div class="tag-row">
+          <span class="tag">JAVA</span>
+          <span class="tag">PAPER API</span>
+          <span class="tag">YAML</span>
         </div>
       </article>
 
@@ -522,6 +548,7 @@
           <span class="stack-pill">Electron</span>
           <span class="stack-pill">PostgreSQL</span>
           <span class="stack-pill">SQLite</span>
+          <span class="stack-pill">YAML</span>
           <span class="stack-pill">Discord API</span>
         </div>
       </div>
