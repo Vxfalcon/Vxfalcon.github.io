@@ -44,14 +44,12 @@
   a { color: inherit; text-decoration: none; }
   .wrap { max-width: 960px; margin: 0 auto; padding: 0 1.5rem; }
 
-  /* ── Side ink-rain ──
+  /* ── Side rain ──
      Falls only in the empty margins outside the 960px content column —
      it physically can't overlap the text, so it needs no z-index games.
-     Drips, not rain: a tapering strand with a blobby head, drooling down
-     with a slight organic sway (two independent animations — a straight
-     linear fall plus a side-to-side wobble on a different property, so
-     they don't fight each other) instead of falling in a rigid straight
-     line. A handful of loose ink-splatter dots are mixed in for texture. */
+     Mostly thin streaks, with an occasional monospace glyph mixed in for
+     a little "digital rain" texture against the literal rain. Vanishes
+     on its own once the viewport is too narrow to have margins at all. */
   .rain-col {
     position: fixed;
     top: 0; bottom: 0;
@@ -64,46 +62,23 @@
   .rain-col.right { right: 0; }
   .raindrop {
     position: absolute;
-    top: -14%;
-    width: 3px;
-    border-radius: 50% 50% 45% 45% / 20% 20% 80% 80%;
-    background: linear-gradient(to bottom, transparent 0%, rgba(255,255,255,var(--op,0.22)) 60%, rgba(255,255,255,var(--op,0.22)) 88%, transparent 100%);
-    filter: blur(.3px);
-    animation: ink-fall var(--dur, 5s) cubic-bezier(.6,0,.85,.3) infinite, ink-wobble var(--wdur, 2.6s) ease-in-out infinite;
-    animation-delay: var(--delay, 0s), var(--wdelay, 0s);
+    top: -12%;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, rgba(255,255,255,var(--op,0.2)) 45%, transparent);
+    animation: rain-fall var(--dur, 5s) linear infinite;
+    animation-delay: var(--delay, 0s);
   }
-  /* The drip's blobby "head" — a rounded ink bead trailing the strand,
-     slightly wider than the body so it reads as viscous rather than a
-     thin clean raindrop. */
-  .raindrop::after {
-    content: '';
-    position: absolute;
-    left: 50%; bottom: 0;
-    width: 6px; height: 7px;
-    background: rgba(255,255,255,var(--op,0.22));
-    border-radius: 55% 55% 60% 60% / 45% 45% 85% 85%;
-    transform: translate(-50%, 35%);
-    filter: blur(.3px);
+  .raindrop.glyph {
+    width: auto;
+    background: none;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: rgba(255,255,255,var(--op,0.2));
+    line-height: 1;
   }
-  /* Loose splatter dots — no strand, no head, just a stray ink fleck. */
-  .raindrop.blob {
-    width: var(--size, 4px);
-    height: var(--size, 4px);
-    background: rgba(255,255,255,var(--op,0.18));
-    border-radius: 42% 58% 55% 45% / 55% 45% 58% 42%;
-    filter: blur(.4px);
-  }
-  .raindrop.blob::after { content: none; }
-  @keyframes ink-fall {
-    0%   { transform: translateY(0) scale(1, .85); }
-    6%   { transform: translateY(6vh) scale(1, 1.08); }
-    100% { transform: translateY(112vh) scale(1, 1.08); }
-  }
-  @keyframes ink-wobble {
-    0%, 100% { margin-left: 0; }
-    25%      { margin-left: 2px; }
-    50%      { margin-left: -1.5px; }
-    75%      { margin-left: 1.5px; }
+  @keyframes rain-fall {
+    from { transform: translateY(0); }
+    to   { transform: translateY(112vh); }
   }
 
   /* ── Brand mark ── a bisected circle: solid on one side, outline on the
@@ -603,23 +578,22 @@
   // outside the content column, so it's pure decoration and never fights
   // for space with real text.
   (function spawnRain() {
+    const glyphs = ['0', '1', '/', '\\', '.', '+', '·'];
     const cols = [document.getElementById('rainLeft'), document.getElementById('rainRight')];
     cols.forEach(col => {
       if (!col) return;
-      for (let i = 0; i < 16; i++) {
+      for (let i = 0; i < 18; i++) {
         const drop = document.createElement('div');
-        const isBlob = i % 5 === 0;
-        drop.className = 'raindrop' + (isBlob ? ' blob' : '');
+        const isGlyph = i % 5 === 0;
+        drop.className = 'raindrop' + (isGlyph ? ' glyph' : '');
         drop.style.left = (Math.random() * 100).toFixed(1) + '%';
-        drop.style.setProperty('--dur', (4 + Math.random() * 6).toFixed(2) + 's');
-        drop.style.setProperty('--delay', (Math.random() * -9).toFixed(2) + 's');
-        drop.style.setProperty('--wdur', (2 + Math.random() * 2.2).toFixed(2) + 's');
-        drop.style.setProperty('--wdelay', (Math.random() * -4).toFixed(2) + 's');
-        drop.style.setProperty('--op', (0.1 + Math.random() * 0.24).toFixed(2));
-        if (isBlob) {
-          drop.style.setProperty('--size', (3 + Math.random() * 5).toFixed(1) + 'px');
+        drop.style.setProperty('--dur', (3 + Math.random() * 5).toFixed(2) + 's');
+        drop.style.setProperty('--delay', (Math.random() * -8).toFixed(2) + 's');
+        drop.style.setProperty('--op', (0.08 + Math.random() * 0.22).toFixed(2));
+        if (isGlyph) {
+          drop.textContent = glyphs[Math.floor(Math.random() * glyphs.length)];
         } else {
-          drop.style.height = (30 + Math.random() * 70).toFixed(0) + 'px';
+          drop.style.height = (40 + Math.random() * 90).toFixed(0) + 'px';
         }
         col.appendChild(drop);
       }
