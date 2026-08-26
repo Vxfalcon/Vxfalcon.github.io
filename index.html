@@ -391,16 +391,25 @@
         <div class="work-card-top">
           <div class="work-title-row">
             <div class="work-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h3a1 1 0 0 0 1 -1v-1a2 2 0 0 1 4 0v1a1 1 0 0 0 1 1h3a1 1 0 0 1 1 1v3a1 1 0 0 0 1 1h1a2 2 0 0 1 0 4h-1a1 1 0 0 0 -1 1v3a1 1 0 0 1 -1 1h-3a1 1 0 0 1 -1 -1v-1a2 2 0 0 0 -4 0v1a1 1 0 0 1 -1 1h-3a1 1 0 0 1 -1 -1v-3a1 1 0 0 1 1 -1h1a2 2 0 0 0 0 -4h-1a1 1 0 0 1 -1 -1v-3a1 1 0 0 1 1 -1"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 6 7-3 7 3-7 3-7-3Z"/><path d="m5 12 7 3 7-3"/><path d="m5 18 7 3 7-3"/></svg>
             </div>
-            <div class="work-title">Plugins</div>
+            <div class="work-title">MoneySMP</div>
           </div>
           <div class="badge-row"><span class="badge badge-outline">Private</span></div>
         </div>
-        <p class="work-desc">A working collection of Minecraft server plugins and supporting dev tools, built and maintained for real servers rather than as standalone releases.</p>
+        <p class="work-desc">A complete custom SMP server build — economy, live-run events, a full RPG-style ability system, and a matching resource pack, all built and maintained together. Credited in-code as Truesight / Vx.Falcon.</p>
+        <ul class="work-points">
+          <li><strong>Server framework</strong> — player economy (balances, pay, SQLite-backed auction house, leaderboard), a team + tier system, and eight built-in event modes: Capture the Flag, King of the Hill, Control Points, Egg Hunt, Battle Royale, Natural Disasters, VIP Protection, and generic ranked events with payouts</li>
+          <li><strong>Ability system</strong> — 11 mythology-themed classes (Poseidon, Berserker, Titan, Executioner, Tempest, Inferno, Phantom, Gaia, Chronos, Nyx, Aether), each with a distinct passive and a multi-stage ultimate (windup → payoff, with matching particle/sound feedback), a per-ability charge economy, a paid reroll system, and an anti-kill-farm safeguard</li>
+          <li><strong>Custom items &amp; resource pack</strong> — a full custom item set using modern 1.21.4+ component-based item models (not legacy CustomModelData overrides), built for the server's team system, plus custom items woven through the plugins themselves</li>
+          <li>Death/respawn protection with combat tagging, so freshly-spawned players can't be farmed but raid mechanics still work for staff-judged exceptions</li>
+        </ul>
         <div class="tag-row">
           <span class="tag">JAVA</span>
-          <span class="tag">SPIGOT / PAPER</span>
+          <span class="tag">PAPER API</span>
+          <span class="tag">SQLITE</span>
+          <span class="tag">CUSTOM ITEM MODELS</span>
+          <span class="tag">RESOURCE PACKS</span>
         </div>
       </article>
 
@@ -438,6 +447,7 @@
           <span class="stack-pill">Vite</span>
           <span class="stack-pill">Electron</span>
           <span class="stack-pill">PostgreSQL</span>
+          <span class="stack-pill">SQLite</span>
           <span class="stack-pill">Discord API</span>
         </div>
       </div>
