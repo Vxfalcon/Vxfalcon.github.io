@@ -90,15 +90,17 @@
     position: absolute;
     opacity: 0;
     pointer-events: none;
-    filter: drop-shadow(0 0 5px rgba(255,255,255,.85));
-    animation: bolt-flash .5s ease-out forwards;
+    filter: drop-shadow(0 0 2px #fff) drop-shadow(0 0 12px rgba(255,255,255,.7));
+    animation: bolt-flash .55s ease-out forwards;
   }
   @keyframes bolt-flash {
     0%   { opacity: 0; }
     8%   { opacity: 1; }
-    22%  { opacity: .25; }
-    38%  { opacity: .95; }
-    55%  { opacity: 0; }
+    20%  { opacity: .3; }
+    34%  { opacity: 1; }
+    46%  { opacity: .15; }
+    58%  { opacity: .7; }
+    72%  { opacity: 0; }
     100% { opacity: 0; }
   }
 
@@ -745,26 +747,70 @@
     });
   })();
 
-  // Lightning — a small bolt streak in one side margin every 10-20s,
+  // Lightning — a procedurally forked bolt in one side margin every 10-20s,
   // confined to the rain columns so it never covers meaningful screen area.
   (function scheduleLightning() {
     const cols = [document.getElementById('rainLeft'), document.getElementById('rainRight')].filter(Boolean);
     if (!cols.length) return;
     const svgNS = 'http://www.w3.org/2000/svg';
-    function strike() {
-      const col = cols[Math.floor(Math.random() * cols.length)];
-      const h = 60 + Math.random() * 100;
+
+    function jaggedPoints(x0, y0, x1, y1, segments, jitter) {
+      const pts = [[x0, y0]];
+      for (let i = 1; i < segments; i++) {
+        const t = i / segments;
+        pts.push([x0 + (x1 - x0) * t + (Math.random() - 0.5) * jitter, y0 + (y1 - y0) * t]);
+      }
+      pts.push([x1, y1]);
+      return pts;
+    }
+    function toPath(pts) { return 'M' + pts.map(p => p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join(' L '); }
+
+    function buildBolt(h) {
+      const w = h * 0.5;
       const svg = document.createElementNS(svgNS, 'svg');
       svg.classList.add('lightning-bolt');
-      svg.setAttribute('viewBox', '0 0 24 48');
-      svg.setAttribute('width', (h * 0.5).toFixed(0));
+      svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+      svg.setAttribute('width', w.toFixed(0));
       svg.setAttribute('height', h.toFixed(0));
-      svg.style.top = (Math.random() * 65).toFixed(1) + '%';
-      svg.style.left = (20 + Math.random() * 55).toFixed(1) + '%';
-      const path = document.createElementNS(svgNS, 'path');
-      path.setAttribute('d', 'M13 1 3 27h8l-3 20 15-26h-9l4-20z');
-      path.setAttribute('fill', '#fff');
-      svg.appendChild(path);
+
+      const mainPts = jaggedPoints(w / 2, 0, w / 2 + (Math.random() - 0.5) * w * 0.6, h, 11, w * 0.3);
+      const main = document.createElementNS(svgNS, 'path');
+      main.setAttribute('d', toPath(mainPts));
+      main.setAttribute('fill', 'none');
+      main.setAttribute('stroke', '#fff');
+      main.setAttribute('stroke-width', '2.2');
+      main.setAttribute('stroke-linecap', 'round');
+      main.setAttribute('stroke-linejoin', 'round');
+      svg.appendChild(main);
+
+      const branches = 3 + Math.floor(Math.random() * 3);
+      for (let b = 0; b < branches; b++) {
+        const originIdx = 2 + Math.floor(Math.random() * (mainPts.length - 4));
+        const [ox, oy] = mainPts[originIdx];
+        const dir = Math.random() < 0.5 ? -1 : 1;
+        const bx = ox + dir * (w * 0.25 + Math.random() * w * 0.45);
+        const by = oy + h * (0.08 + Math.random() * 0.18);
+        const branchPts = jaggedPoints(ox, oy, bx, by, 4 + Math.floor(Math.random() * 3), w * 0.15);
+        const branch = document.createElementNS(svgNS, 'path');
+        branch.setAttribute('d', toPath(branchPts));
+        branch.setAttribute('fill', 'none');
+        branch.setAttribute('stroke', '#fff');
+        branch.setAttribute('stroke-width', (0.9 + Math.random() * 0.5).toFixed(2));
+        branch.setAttribute('stroke-linecap', 'round');
+        branch.setAttribute('stroke-linejoin', 'round');
+        branch.setAttribute('opacity', (0.4 + Math.random() * 0.35).toFixed(2));
+        svg.appendChild(branch);
+      }
+      return svg;
+    }
+
+    function strike() {
+      const col = cols[Math.floor(Math.random() * cols.length)];
+      const h = Math.min(280, 160 + Math.random() * 160);
+      const svg = buildBolt(h);
+      svg.style.top = (Math.random() * Math.max(0, window.innerHeight - h)).toFixed(0) + 'px';
+      svg.style.left = '50%';
+      svg.style.transform = `translateX(calc(-50% + ${(Math.random() * 24 - 12).toFixed(0)}px))`;
       col.appendChild(svg);
       svg.addEventListener('animationend', () => svg.remove());
       setTimeout(strike, 10000 + Math.random() * 10000);
