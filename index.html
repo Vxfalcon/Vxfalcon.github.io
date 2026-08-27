@@ -969,7 +969,11 @@
 
     function startPlayback() {
       audio.volume = 0;
-      audio.play().then(() => fadeVolume(0, TARGET_VOLUME, FADE_IN_MS)).catch(() => {});
+      const attempt = () => audio.play().then(() => fadeVolume(0, TARGET_VOLUME, FADE_IN_MS));
+      // Switching `src` can leave a play() call racing the browser's load
+      // reset, which silently rejects once (AbortError) — retry once after
+      // a short delay instead of leaving playback stuck on nothing.
+      attempt().catch(() => { setTimeout(() => { attempt().catch(() => {}); }, 150); });
     }
 
     function pausePlayback() {
@@ -985,8 +989,11 @@
 
     function loadTrack(index) {
       currentIndex = (index + TRACKS.length) % TRACKS.length;
+      // No manual currentTime reset here — assigning `src` already resets
+      // playback position, and forcing currentTime=0 before the new source
+      // has loaded can throw in some browsers, which used to silently abort
+      // the rest of changeTrack() below (including the play() call itself).
       audio.src = TRACKS[currentIndex];
-      audio.currentTime = 0;
       player.title = 'Play: ' + TRACK_NAMES[currentIndex];
     }
 
