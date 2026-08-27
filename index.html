@@ -414,6 +414,84 @@
   .stack-pill:hover { border-color: var(--border2); background: var(--surface2); }
 
   /* ── Footer ── */
+  /* ── Record player ── fixed widget, bottom-right. Click toggles playback:
+     the tonearm swings onto the disc and it spins while playing, lifts off
+     and the disc stops when paused. Looping/fade handled in JS. */
+  .record-player {
+    position: fixed;
+    right: 22px;
+    bottom: 22px;
+    z-index: 45;
+    width: 82px;
+    height: 82px;
+    padding: 0;
+    border: 1px solid var(--border2);
+    background: var(--surface);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: background .15s ease;
+  }
+  .record-player:hover { background: var(--surface2); }
+  .rp-disc {
+    position: absolute;
+    inset: 9px;
+    border-radius: 50%;
+    background: repeating-radial-gradient(circle at center, #050505 0 2px, #1a1a1a 2px 4px);
+    box-shadow: 0 0 0 1px var(--border2);
+    animation: rp-spin 2.6s linear infinite;
+    animation-play-state: paused;
+  }
+  .record-player.playing .rp-disc { animation-play-state: running; }
+  @keyframes rp-spin { to { transform: rotate(360deg); } }
+  .rp-label {
+    position: absolute;
+    inset: 36%;
+    border-radius: 50%;
+    background: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .rp-tonearm {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 44px;
+    height: 3px;
+    background: var(--text2);
+    border-radius: 2px;
+    transform-origin: right center;
+    transform: rotate(-38deg);
+    transition: transform .5s cubic-bezier(.4,0,.2,1);
+  }
+  .record-player.playing .rp-tonearm { transform: rotate(18deg); }
+  .rp-tonearm::after {
+    content: '';
+    position: absolute;
+    right: -4px;
+    top: 50%;
+    width: 9px;
+    height: 9px;
+    background: var(--text3);
+    border: 1px solid var(--border2);
+    border-radius: 50%;
+    transform: translateY(-50%);
+  }
+  .rp-needle {
+    position: absolute;
+    left: -3px;
+    top: 50%;
+    width: 7px;
+    height: 7px;
+    background: var(--white);
+    border-radius: 50%;
+    transform: translateY(-50%);
+  }
+  @media (max-width: 640px) {
+    .record-player { width: 62px; height: 62px; right: 16px; bottom: 16px; }
+    .rp-tonearm { width: 32px; }
+  }
+
   footer { border-top: 1px solid var(--border); padding: 2.5rem 0 3rem; }
   .footer-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
   .footer-note { color: var(--text3); font-size: 13px; font-family: var(--mono); }
@@ -704,6 +782,18 @@
   </div>
 </footer>
 
+<button class="record-player" id="recordPlayer" type="button" aria-pressed="false" aria-label="Play background music">
+  <span class="rp-disc">
+    <span class="rp-label">
+      <svg viewBox="0 0 24 24" width="13" height="13">
+        <path d="M12 1a11 11 0 1 0 0 22Z" fill="#000"/>
+        <circle cx="12" cy="12" r="11" fill="none" stroke="#000" stroke-width="1.2"/>
+      </svg>
+    </span>
+  </span>
+  <span class="rp-tonearm"><span class="rp-needle"></span></span>
+</button>
+
 <script>
   const io = new IntersectionObserver((entries) => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in-view'); });
@@ -837,6 +927,55 @@
 
     setTimeout(smallStrike, 5000 + Math.random() * 5000);
     setTimeout(bigStrike, 10000 + Math.random() * 5000);
+  })();
+
+  // Record player — click toggles playback; tonearm/disc state is pure CSS
+  // driven by the .playing class. Looping is manual (no native `loop`) so
+  // each restart can fade in instead of cutting back to full volume.
+  (function recordPlayer() {
+    const AUDIO_SRC = 'REPLACE_WITH_TRACK_URL'; // set once the track URL is provided
+    const TARGET_VOLUME = 0.55;
+    const FADE_IN_MS = 1500;
+
+    const player = document.getElementById('recordPlayer');
+    if (!player) return;
+
+    const audio = new Audio(AUDIO_SRC);
+    audio.preload = 'auto';
+    audio.volume = 0;
+
+    let fadeRAF = null;
+    function fadeVolume(from, to, duration) {
+      if (fadeRAF) cancelAnimationFrame(fadeRAF);
+      const start = performance.now();
+      function step(now) {
+        const t = Math.min(1, (now - start) / duration);
+        audio.volume = from + (to - from) * t;
+        fadeRAF = t < 1 ? requestAnimationFrame(step) : null;
+      }
+      fadeRAF = requestAnimationFrame(step);
+    }
+
+    function startPlayback() {
+      audio.volume = 0;
+      audio.play().then(() => fadeVolume(0, TARGET_VOLUME, FADE_IN_MS)).catch(() => {});
+    }
+
+    audio.addEventListener('ended', () => {
+      audio.currentTime = 0;
+      startPlayback();
+    });
+
+    player.addEventListener('click', () => {
+      const isPlaying = player.classList.toggle('playing');
+      player.setAttribute('aria-pressed', String(isPlaying));
+      if (isPlaying) {
+        startPlayback();
+      } else {
+        if (fadeRAF) cancelAnimationFrame(fadeRAF);
+        audio.pause();
+      }
+    });
   })();
 </script>
 
