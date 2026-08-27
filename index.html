@@ -7,7 +7,7 @@
 <meta name="description" content="Minecraft developer — anti-cheat systems, server plugins, and dev tooling.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' fill='black'/%3E%3Cpath d='M12 1a11 11 0 1 0 0 22Z' fill='white'/%3E%3Ccircle cx='12' cy='12' r='11' fill='none' stroke='white' stroke-width='1.2'/%3E%3C/svg%3E">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=Permanent+Marker&family=Kalam:wght@400;700&display=swap');
 
   :root {
     --bg:        #000000;
@@ -285,10 +285,55 @@
   .reveal { opacity: 0; transform: translateY(16px); transition: opacity .5s ease, transform .5s ease; }
   .reveal.in-view { opacity: 1; transform: translateY(0); }
 
-  /* ── Work cards ── */
-  .work-grid { display: grid; grid-template-columns: 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); }
-  .work-card { background: var(--bg); padding: 2rem; transition: background .18s ease; }
-  .work-card:hover { background: var(--surface2); }
+  /* ── Work cards ── ink-on-paper notes pinned to the black backdrop: warm
+     aged paper, grain + vignette, hand lettering, a slight independent tilt
+     per card that straightens on hover. The section frame around them
+     (heading, nav, hero) stays the site's usual black/white minimalism —
+     only the notes themselves get the authentic paper treatment. */
+  #work {
+    --paper: #ecdfb8;
+    --paper2: #ddc78f;
+    --ink: #241c12;
+    --ink-soft: #4d3f27;
+    --ink-faint: rgba(36,28,18,.5);
+  }
+  .work-grid { display: flex; flex-direction: column; gap: 32px; }
+  .work-card {
+    position: relative;
+    isolation: isolate;
+    background: radial-gradient(ellipse at 30% 20%, var(--paper) 0%, var(--paper2) 75%);
+    color: var(--ink);
+    padding: 2.1rem 2.2rem;
+    border-radius: 2px;
+    box-shadow: 0 14px 30px rgba(0,0,0,.55), 0 2px 8px rgba(0,0,0,.35);
+    transform: rotate(var(--tilt, 0deg));
+    transition: transform .3s ease, box-shadow .3s ease;
+  }
+  .work-card:nth-child(1) { --tilt: -1.1deg; }
+  .work-card:nth-child(2) { --tilt: 0.9deg; }
+  .work-card:nth-child(3) { --tilt: -0.7deg; }
+  .work-card:nth-child(4) { --tilt: 1.1deg; }
+  .work-card:nth-child(5) { --tilt: -0.9deg; }
+  .work-card:hover {
+    transform: rotate(0deg) translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0,0,0,.6), 0 2px 8px rgba(0,0,0,.4);
+  }
+  .work-card::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(20,13,5,.5) 100%);
+    mix-blend-mode: multiply;
+    pointer-events: none;
+  }
+  .work-card::after {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: .18;
+    mix-blend-mode: multiply;
+    pointer-events: none;
+  }
+  .work-card > * { position: relative; z-index: 1; }
   .work-card-top {
     display: flex;
     align-items: flex-start;
@@ -300,51 +345,50 @@
   .work-title-row { display: flex; align-items: center; gap: 14px; }
   .work-icon {
     width: 38px; height: 38px;
-    border: 1px solid var(--border2);
+    border: 1.5px solid var(--ink-soft);
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
-    color: var(--white);
+    color: var(--ink);
   }
   .work-icon svg { width: 18px; height: 18px; }
-  .work-title { font-size: 17px; font-weight: 700; letter-spacing: -0.005em; }
+  .work-title { font-family: 'Permanent Marker', cursive; font-size: 21px; font-weight: 400; color: var(--ink); letter-spacing: 0.01em; }
   .badge-row { display: flex; gap: 8px; flex-wrap: wrap; }
   .badge {
     display: inline-flex;
     align-items: center;
-    font-family: var(--mono);
-    font-size: 10.5px;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    padding: 4px 9px;
-    border-radius: var(--radius);
+    font-family: 'Kalam', cursive;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 2px;
     white-space: nowrap;
   }
-  .badge-solid { background: var(--white); color: #000; }
-  .badge-outline { border: 1px solid var(--border2); color: var(--text2); }
-  .badge-dim { border: 1px dashed var(--border); color: var(--text3); }
-  .work-desc { color: var(--text2); font-size: 14.5px; margin-bottom: 16px; }
+  .badge-solid { background: var(--ink); color: var(--paper); }
+  .badge-outline { border: 1.5px dashed var(--ink-soft); color: var(--ink-soft); }
+  .badge-dim { border: 1px dashed var(--ink-faint); color: var(--ink-faint); }
+  .work-desc { font-family: 'Kalam', cursive; color: var(--ink-soft); font-size: 16px; line-height: 1.5; margin-bottom: 16px; }
   .work-points { list-style: none; display: flex; flex-direction: column; gap: 9px; margin-bottom: 18px; }
   .work-points li {
     display: flex; gap: 10px;
-    font-size: 13.5px;
-    color: var(--text2);
-    line-height: 1.55;
+    font-family: 'Kalam', cursive;
+    font-size: 15px;
+    color: var(--ink-soft);
+    line-height: 1.5;
   }
   .work-points li::before {
     content: '–';
-    color: var(--text3);
+    color: var(--ink-faint);
     flex-shrink: 0;
-    font-family: var(--mono);
   }
   .tag-row { display: flex; flex-wrap: wrap; gap: 8px; }
   .tag {
     font-family: var(--mono);
-    font-size: 11px;
-    color: var(--text2);
-    border: 1px solid var(--border);
+    font-size: 10.5px;
+    color: var(--ink-soft);
+    background: rgba(255,255,255,.15);
+    border: 1px solid var(--ink-faint);
     padding: 3px 9px;
-    border-radius: var(--radius);
+    border-radius: 2px;
   }
   .card-link-btn {
     display: inline-flex;
@@ -352,15 +396,15 @@
     gap: 7px;
     margin-top: 16px;
     padding: 8px 15px;
-    border: 1px solid var(--border2);
-    border-radius: var(--radius);
-    color: var(--white);
-    font-size: 12.5px;
-    font-weight: 600;
-    font-family: var(--mono);
+    border: 1.5px solid var(--ink);
+    border-radius: 2px;
+    color: var(--ink);
+    font-size: 13px;
+    font-weight: 700;
+    font-family: 'Kalam', cursive;
     transition: background .15s ease, color .15s ease;
   }
-  .card-link-btn:hover { background: var(--white); color: #000; }
+  .card-link-btn:hover { background: var(--ink); color: var(--paper); }
   .card-link-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
 
   /* ── Community ── */
@@ -627,15 +671,15 @@
             <div class="work-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 6 7-3 7 3-7 3-7-3Z"/><path d="m5 12 7 3 7-3"/><path d="m5 18 7 3 7-3"/></svg>
             </div>
-            <div class="work-title">MoneySMP <span style="color:var(--text3);font-weight:500;font-size:13px">(recreation)</span></div>
+            <div class="work-title">MoneySMP <span style="color:var(--ink-faint);font-weight:700;font-size:13px;font-family:'Kalam',cursive;">(recreation)</span></div>
           </div>
           <div class="badge-row"><span class="badge badge-outline">Private</span></div>
         </div>
-        <p class="work-desc">Money SMP is <a href="https://moneysmp.fandom.com/wiki/Money_SMP_Wiki" target="_blank" rel="noopener" style="color:var(--white);text-decoration:underline">a real, existing series</a> — I didn't design the original, this is a from-scratch recreation of its server systems, reimplemented independently as Truesight / Vx.Falcon.</p>
+        <p class="work-desc">Money SMP is <a href="https://moneysmp.fandom.com/wiki/Money_SMP_Wiki" target="_blank" rel="noopener" style="color:var(--ink);text-decoration:underline">a real, existing series</a> — I didn't design the original, this is a from-scratch recreation of its server systems, reimplemented independently as Truesight / Vx.Falcon.</p>
         <div class="tag-row" style="margin-bottom:16px">
-          <span class="tag" style="border-color:var(--white);color:var(--white)">CUSTOM ITEMS</span>
-          <span class="tag" style="border-color:var(--white);color:var(--white)">FULL TEXTURE PACK WORK</span>
-          <span class="tag" style="border-color:var(--white);color:var(--white)">FULL GAME MECHANICS</span>
+          <span class="tag" style="border-color:var(--ink);color:var(--ink);font-weight:700">CUSTOM ITEMS</span>
+          <span class="tag" style="border-color:var(--ink);color:var(--ink);font-weight:700">FULL TEXTURE PACK WORK</span>
+          <span class="tag" style="border-color:var(--ink);color:var(--ink);font-weight:700">FULL GAME MECHANICS</span>
         </div>
         <ul class="work-points">
           <li><strong>Custom items</strong> — 5 hand-built team-badge items, modern component-based item models, own textures per team</li>
