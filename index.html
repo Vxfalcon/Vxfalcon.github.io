@@ -950,7 +950,10 @@
   (function recordPlayer() {
     const TRACKS = ['audio/smooth-operator.mp3', 'audio/belong-in-the-sun.mp3', 'audio/falling-behind.mp3', 'audio/my-love-mine-all-mine.mp3', 'audio/beanie-slowed.mp3'];
     const TRACK_NAMES = ['Smooth Operator', 'Belong in the Sun', 'Falling Behind', 'My Love Mine All Mine', 'Beanie (Slowed)'];
-    const TARGET_VOLUME = 0.01;
+    const DESKTOP_VOLUME = 0.01;
+    const MOBILE_VOLUME = 0.06;
+    const isMobile = () => window.matchMedia('(max-width: 640px)').matches;
+    const targetVolume = () => (isMobile() ? MOBILE_VOLUME : DESKTOP_VOLUME);
     const FADE_IN_MS = 2600;
     const CLICK_WINDOW_MS = 350;
 
@@ -982,7 +985,7 @@
 
     function startPlayback() {
       audio.volume = 0;
-      const attempt = () => audio.play().then(() => fadeVolume(0, TARGET_VOLUME, FADE_IN_MS));
+      const attempt = () => audio.play().then(() => fadeVolume(0, targetVolume(), FADE_IN_MS));
       // Switching `src` can leave a play() call racing the browser's load
       // reset, which silently rejects once (AbortError) — retry once after
       // a short delay instead of leaving playback stuck on nothing.
