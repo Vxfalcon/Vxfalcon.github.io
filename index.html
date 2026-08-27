@@ -431,6 +431,7 @@
     border-radius: var(--radius);
     cursor: pointer;
     transition: background .15s ease;
+    touch-action: manipulation;
   }
   .record-player:hover { background: var(--surface2); }
   .rp-disc {
@@ -955,7 +956,7 @@
     const isMobile = () => window.matchMedia('(max-width: 640px)').matches;
     const targetVolume = () => (isMobile() ? MOBILE_VOLUME : DESKTOP_VOLUME);
     const FADE_IN_MS = 2600;
-    const CLICK_WINDOW_MS = 350;
+    const CLICK_WINDOW_MS = 500;
 
     const player = document.getElementById('recordPlayer');
     if (!player) return;
