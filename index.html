@@ -93,6 +93,9 @@
     filter: drop-shadow(0 0 2px #fff) drop-shadow(0 0 12px rgba(255,255,255,.7));
     animation: bolt-flash .55s ease-out forwards;
   }
+  .lightning-bolt.big {
+    filter: drop-shadow(0 0 3px #fff) drop-shadow(0 0 20px rgba(255,255,255,.8));
+  }
   @keyframes bolt-flash {
     0%   { opacity: 0; }
     8%   { opacity: 1; }
@@ -765,10 +768,15 @@
     }
     function toPath(pts) { return 'M' + pts.map(p => p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join(' L '); }
 
-    function buildBolt(h) {
+    function buildBolt(h, opts) {
+      opts = opts || {};
+      const mainWidth = opts.mainWidth || 2.2;
+      const branchMin = opts.branchMin != null ? opts.branchMin : 3;
+      const branchMax = opts.branchMax != null ? opts.branchMax : 5;
       const w = h * 0.5;
       const svg = document.createElementNS(svgNS, 'svg');
       svg.classList.add('lightning-bolt');
+      if (opts.big) svg.classList.add('big');
       svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
       svg.setAttribute('width', w.toFixed(0));
       svg.setAttribute('height', h.toFixed(0));
@@ -778,12 +786,12 @@
       main.setAttribute('d', toPath(mainPts));
       main.setAttribute('fill', 'none');
       main.setAttribute('stroke', '#fff');
-      main.setAttribute('stroke-width', '2.2');
+      main.setAttribute('stroke-width', String(mainWidth));
       main.setAttribute('stroke-linecap', 'round');
       main.setAttribute('stroke-linejoin', 'round');
       svg.appendChild(main);
 
-      const branches = 3 + Math.floor(Math.random() * 3);
+      const branches = branchMin + Math.floor(Math.random() * (branchMax - branchMin + 1));
       for (let b = 0; b < branches; b++) {
         const originIdx = 2 + Math.floor(Math.random() * (mainPts.length - 4));
         const [ox, oy] = mainPts[originIdx];
@@ -804,18 +812,31 @@
       return svg;
     }
 
-    function strike() {
-      const col = cols[Math.floor(Math.random() * cols.length)];
-      const h = Math.min(280, 160 + Math.random() * 160);
-      const svg = buildBolt(h);
-      svg.style.top = (Math.random() * Math.max(0, window.innerHeight - h)).toFixed(0) + 'px';
+    function place(svg, top) {
+      svg.style.top = top.toFixed(0) + 'px';
       svg.style.left = '50%';
       svg.style.transform = `translateX(calc(-50% + ${(Math.random() * 24 - 12).toFixed(0)}px))`;
+      const col = cols[Math.floor(Math.random() * cols.length)];
       col.appendChild(svg);
       svg.addEventListener('animationend', () => svg.remove());
-      setTimeout(strike, 10000 + Math.random() * 10000);
     }
-    setTimeout(strike, 10000 + Math.random() * 10000);
+
+    // Small strikes — the original size, appearing anywhere in the column.
+    function smallStrike() {
+      const h = Math.min(280, 160 + Math.random() * 160);
+      place(buildBolt(h), Math.random() * Math.max(0, window.innerHeight - h));
+      setTimeout(smallStrike, 10000 + Math.random() * 5000);
+    }
+
+    // Big strikes — taller, thicker, more branches, anchored to the very top.
+    function bigStrike() {
+      const h = Math.min(window.innerHeight * 0.92, window.innerHeight * (0.55 + Math.random() * 0.3));
+      place(buildBolt(h, { mainWidth: 2.8, branchMin: 4, branchMax: 7, big: true }), 0);
+      setTimeout(bigStrike, 25000 + (Math.random() * 4000 - 2000));
+    }
+
+    setTimeout(smallStrike, 10000 + Math.random() * 5000);
+    setTimeout(bigStrike, 25000 + (Math.random() * 4000 - 2000));
   })();
 </script>
 
