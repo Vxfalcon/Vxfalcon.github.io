@@ -937,14 +937,14 @@
   (function recordPlayer() {
     const TRACKS = ['audio/watch-this.mp3', 'audio/me-gustas-tu.mp3', 'audio/belong-in-the-sun.mp3'];
     const TRACK_NAMES = ['Watch This (ARIZONATEARS Pluggnb Remix)', 'Me Gustas Tu', 'Belong in the Sun'];
-    const TARGET_VOLUME = 0.05;
+    const TARGET_VOLUME = 0.02;
     const FADE_IN_MS = 2600;
     const CLICK_WINDOW_MS = 350;
 
     const player = document.getElementById('recordPlayer');
     if (!player) return;
 
-    let currentIndex = 0;
+    let currentIndex = Math.floor(Math.random() * TRACKS.length);
     const audio = new Audio(TRACKS[currentIndex]);
     audio.preload = 'auto';
     audio.volume = 0;
