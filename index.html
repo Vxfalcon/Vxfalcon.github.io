@@ -33,6 +33,7 @@
     color: var(--text);
     line-height: 1.6;
     min-height: 100vh;
+    overflow-x: hidden;
   }
 
   ::selection { background: #fff; color: #000; }
@@ -506,6 +507,18 @@
     .nav-links .nav-gh span.btn-label { display: none; }
     .nav-links .nav-gh { padding: 7px 9px; }
     .hero { padding: 5rem 0 3rem; }
+    .community-widget iframe { height: 420px; }
+  }
+
+  /* ── Small phones ── the nav row (brand + two icon buttons) is the one
+     place tight enough to actually overflow below ~400px; everything else
+     on the page already wraps or scales fluidly. */
+  @media (max-width: 420px) {
+    .wrap { padding: 0 1rem; }
+    .nav-brand { font-size: 13px; gap: 8px; }
+    .nav-brand .nav-sub { display: none; }
+    .nav-links { gap: 10px; }
+    .nav-links .nav-gh { padding: 6px 8px; }
   }
 </style>
 </head>
@@ -521,7 +534,7 @@
         <path d="M12 1a11 11 0 1 0 0 22Z" fill="#fff"/>
         <circle cx="12" cy="12" r="11" fill="none" stroke="#fff" stroke-width="1.2"/>
       </svg>
-      TrueSight <span style="color:var(--text3);font-weight:500;margin-left:2px">/ Vx.Falcon</span>
+      TrueSight <span class="nav-sub" style="color:var(--text3);font-weight:500;margin-left:2px">/ Vx.Falcon</span>
     </div>
     <div class="nav-links">
       <a class="nav-text-link" href="#work">work</a>
