@@ -81,26 +81,24 @@
     to   { transform: translateY(112vh); }
   }
 
-  /* ── Lightning ── a random, occasional flash across the whole viewport —
-     the storm implied by the side rain, made real once in a while. Timed
-     in JS (10–20s, random), animated here as a double-flicker so it reads
-     as a strike rather than a screen glitch. */
-  .lightning-flash {
-    position: fixed;
-    inset: 0;
-    background: #fff;
+  /* ── Lightning ── a small bolt-shaped streak that appears briefly inside
+     the same side margins as the rain, every 10-20s at random. Deliberately
+     NOT a full-viewport flash — a large-area screen-wide strobe is a real
+     photosensitive-seizure risk, a small single flicker in a narrow margin
+     is not. */
+  .lightning-bolt {
+    position: absolute;
     opacity: 0;
     pointer-events: none;
-    z-index: 90;
-    mix-blend-mode: screen;
+    filter: drop-shadow(0 0 5px rgba(255,255,255,.85));
+    animation: bolt-flash .5s ease-out forwards;
   }
-  .lightning-flash.strike { animation: lightning-strike .6s ease-out; }
-  @keyframes lightning-strike {
+  @keyframes bolt-flash {
     0%   { opacity: 0; }
-    6%   { opacity: .5; }
-    12%  { opacity: .06; }
-    18%  { opacity: .35; }
-    28%  { opacity: 0; }
+    8%   { opacity: 1; }
+    22%  { opacity: .25; }
+    38%  { opacity: .95; }
+    55%  { opacity: 0; }
     100% { opacity: 0; }
   }
 
@@ -432,7 +430,6 @@
 
 <div class="rain-col left" id="rainLeft" aria-hidden="true"></div>
 <div class="rain-col right" id="rainRight" aria-hidden="true"></div>
-<div class="lightning-flash" id="lightningFlash" aria-hidden="true"></div>
 
 <nav class="site-nav">
   <div class="wrap nav-inner">
@@ -748,17 +745,31 @@
     });
   })();
 
-  // Lightning — one flash every 10-20s, random each time.
+  // Lightning — a small bolt streak in one side margin every 10-20s,
+  // confined to the rain columns so it never covers meaningful screen area.
   (function scheduleLightning() {
-    const flash = document.getElementById('lightningFlash');
-    if (!flash) return;
-    const delay = 10000 + Math.random() * 10000;
-    setTimeout(() => {
-      flash.classList.remove('strike');
-      void flash.offsetWidth;
-      flash.classList.add('strike');
-      scheduleLightning();
-    }, delay);
+    const cols = [document.getElementById('rainLeft'), document.getElementById('rainRight')].filter(Boolean);
+    if (!cols.length) return;
+    const svgNS = 'http://www.w3.org/2000/svg';
+    function strike() {
+      const col = cols[Math.floor(Math.random() * cols.length)];
+      const h = 60 + Math.random() * 100;
+      const svg = document.createElementNS(svgNS, 'svg');
+      svg.classList.add('lightning-bolt');
+      svg.setAttribute('viewBox', '0 0 24 48');
+      svg.setAttribute('width', (h * 0.5).toFixed(0));
+      svg.setAttribute('height', h.toFixed(0));
+      svg.style.top = (Math.random() * 65).toFixed(1) + '%';
+      svg.style.left = (20 + Math.random() * 55).toFixed(1) + '%';
+      const path = document.createElementNS(svgNS, 'path');
+      path.setAttribute('d', 'M13 1 3 27h8l-3 20 15-26h-9l4-20z');
+      path.setAttribute('fill', '#fff');
+      svg.appendChild(path);
+      col.appendChild(svg);
+      svg.addEventListener('animationend', () => svg.remove());
+      setTimeout(strike, 10000 + Math.random() * 10000);
+    }
+    setTimeout(strike, 10000 + Math.random() * 10000);
   })();
 </script>
 
