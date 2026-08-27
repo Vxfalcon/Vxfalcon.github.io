@@ -81,6 +81,29 @@
     to   { transform: translateY(112vh); }
   }
 
+  /* ── Lightning ── a random, occasional flash across the whole viewport —
+     the storm implied by the side rain, made real once in a while. Timed
+     in JS (10–20s, random), animated here as a double-flicker so it reads
+     as a strike rather than a screen glitch. */
+  .lightning-flash {
+    position: fixed;
+    inset: 0;
+    background: #fff;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 90;
+    mix-blend-mode: screen;
+  }
+  .lightning-flash.strike { animation: lightning-strike .6s ease-out; }
+  @keyframes lightning-strike {
+    0%   { opacity: 0; }
+    6%   { opacity: .5; }
+    12%  { opacity: .06; }
+    18%  { opacity: .35; }
+    28%  { opacity: 0; }
+    100% { opacity: 0; }
+  }
+
   /* ── Brand mark ── a bisected circle: solid on one side, outline on the
      other. The whole site's black/white duality distilled into one glyph,
      used as the logo and (inline) the favicon. */
@@ -409,6 +432,7 @@
 
 <div class="rain-col left" id="rainLeft" aria-hidden="true"></div>
 <div class="rain-col right" id="rainRight" aria-hidden="true"></div>
+<div class="lightning-flash" id="lightningFlash" aria-hidden="true"></div>
 
 <nav class="site-nav">
   <div class="wrap nav-inner">
@@ -722,6 +746,19 @@
         col.appendChild(drop);
       }
     });
+  })();
+
+  // Lightning — one flash every 10-20s, random each time.
+  (function scheduleLightning() {
+    const flash = document.getElementById('lightningFlash');
+    if (!flash) return;
+    const delay = 10000 + Math.random() * 10000;
+    setTimeout(() => {
+      flash.classList.remove('strike');
+      void flash.offsetWidth;
+      flash.classList.add('strike');
+      scheduleLightning();
+    }, delay);
   })();
 </script>
 
