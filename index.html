@@ -137,6 +137,24 @@
   }
   .nav-links .nav-gh:hover { background: var(--white); color: #000; }
   .nav-links .nav-gh svg { width: 14px; height: 14px; }
+  .nav-links .nav-gh { position: relative; cursor: pointer; }
+  .nav-gh .copy-toast {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background: var(--white);
+    color: #000;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 8px;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity .15s ease, transform .15s ease;
+    pointer-events: none;
+  }
+  .nav-gh .copy-toast.show { opacity: 1; transform: translateY(0); }
 
   /* ── Hero ── */
   .hero { padding: 7rem 0 5.5rem; }
@@ -156,6 +174,16 @@
     animation: pulse 1.6s ease-in-out infinite;
   }
   @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .2; } }
+  .hero-now {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text3);
+    margin-bottom: 22px;
+    opacity: 0;
+    animation: rise .5s ease .04s forwards;
+  }
+  .hero-now a { color: var(--text2); text-decoration: underline; text-underline-offset: 3px; transition: color .15s ease; }
+  .hero-now a:hover { color: var(--white); }
   .hero h1 {
     font-size: clamp(2.15rem, 5vw, 3.2rem);
     font-weight: 800;
@@ -325,7 +353,11 @@
     flex-shrink: 0;
     max-width: 100%;
   }
-  .community-widget iframe { display: block; max-width: 100%; }
+  .community-widget iframe {
+    display: block;
+    max-width: 100%;
+    filter: brightness(0.78) contrast(1.08) saturate(0.85);
+  }
 
   /* ── Stack ── */
   .stack-groups { display: flex; flex-direction: column; gap: 24px; }
@@ -361,6 +393,8 @@
   @media (max-width: 640px) {
     .nav-links { gap: 18px; }
     .nav-links a.nav-text-link { display: none; }
+    .nav-links .nav-gh span.btn-label { display: none; }
+    .nav-links .nav-gh { padding: 7px 9px; }
     .hero { padding: 5rem 0 3rem; }
   }
 </style>
@@ -385,8 +419,13 @@
       <a class="nav-text-link" href="#community">community</a>
       <a class="nav-gh" href="https://github.com/Vxfalcon" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.5 5.73.5 12c0 5.09 3.29 9.4 7.86 10.93.58.1.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.88-1.54-3.88-1.54-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.7.08-.7 1.17.08 1.78 1.2 1.78 1.2 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.55-.29-5.23-1.28-5.23-5.68 0-1.25.45-2.28 1.19-3.08-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.64 1.59.24 2.76.12 3.05.74.8 1.18 1.83 1.18 3.08 0 4.41-2.69 5.38-5.25 5.67.41.36.78 1.08.78 2.17 0 1.56-.01 2.82-.01 3.2 0 .32.21.67.8.56C20.71 21.39 24 17.08 24 12 24 5.73 18.27.5 12 .5Z"/></svg>
-        GitHub
+        <span class="btn-label">GitHub</span>
       </a>
+      <button class="nav-gh nav-discord-copy" type="button" data-discord="christislordforev3r" aria-label="Copy Discord username">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.07.07 0 0 0-.075.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.6 12.6 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.056 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.3 12.3 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.9 19.9 0 0 0 6.002-3.03.077.077 0 0 0 .032-.055c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028ZM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.955 2.418-2.157 2.418Zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418Z"/></svg>
+        <span class="btn-label">Discord</span>
+        <span class="copy-toast">Copied username!</span>
+      </button>
     </div>
   </div>
 </nav>
@@ -394,6 +433,7 @@
 <header class="hero">
   <div class="wrap">
     <div class="hero-eyebrow"><span class="blink"></span> AVAILABLE FOR MINECRAFT DEV WORK</div>
+    <div class="hero-now">NOW BUILDING → <a href="#work">MC Forge</a></div>
     <h1>Minecraft developer building <span class="mark-text">tools, plugins, and anti-cheat systems.</span></h1>
     <p class="lede">Server-side Minecraft systems — anti-cheat, economy frameworks, class/ability mechanics, custom items. Currently building MC Forge, a visual item and ability generator for Paper.</p>
     <div class="hero-actions">
@@ -637,6 +677,20 @@
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in-view'); });
   }, { threshold: 0.1 });
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // Discord username — no stable public profile URL to link to, so copy
+  // it to the clipboard instead and flash a toast confirming it.
+  const discordBtn = document.querySelector('.nav-discord-copy');
+  if (discordBtn) {
+    discordBtn.addEventListener('click', async () => {
+      const username = discordBtn.dataset.discord;
+      try { await navigator.clipboard.writeText(username); } catch (e) { /* clipboard unavailable */ }
+      const toast = discordBtn.querySelector('.copy-toast');
+      toast.classList.add('show');
+      clearTimeout(discordBtn._toastTimer);
+      discordBtn._toastTimer = setTimeout(() => toast.classList.remove('show'), 1600);
+    });
+  }
 
   // Side rain — see .rain-col in <style>. Confined to the empty margins
   // outside the content column, so it's pure decoration and never fights
