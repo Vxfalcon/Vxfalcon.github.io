@@ -461,10 +461,10 @@
     background: var(--text2);
     border-radius: 2px;
     transform-origin: right center;
-    transform: rotate(-38deg);
+    transform: rotate(18deg);
     transition: transform .5s cubic-bezier(.4,0,.2,1);
   }
-  .record-player.playing .rp-tonearm { transform: rotate(18deg); }
+  .record-player.playing .rp-tonearm { transform: rotate(-38deg); }
   .rp-tonearm::after {
     content: '';
     position: absolute;
@@ -929,20 +929,26 @@
     setTimeout(bigStrike, 10000 + Math.random() * 5000);
   })();
 
-  // Record player — click toggles playback; tonearm/disc state is pure CSS
-  // driven by the .playing class. Looping is manual (no native `loop`) so
-  // each restart can fade in instead of cutting back to full volume.
+  // Record player — tonearm/disc state is pure CSS driven by the .playing
+  // class. Looping is manual (no native `loop`) so each restart can fade in
+  // instead of cutting back to full volume. Click count (within a short
+  // window) picks the action: 1 = toggle play/pause, 2 = next track,
+  // 3 = previous track.
   (function recordPlayer() {
-    const AUDIO_SRC = 'REPLACE_WITH_TRACK_URL'; // set once the track URL is provided
+    const TRACKS = ['audio/watch-this.mp3', 'audio/me-gustas-tu.mp3', 'audio/belong-in-the-sun.mp3'];
+    const TRACK_NAMES = ['Watch This (ARIZONATEARS Pluggnb Remix)', 'Me Gustas Tu', 'Belong in the Sun'];
     const TARGET_VOLUME = 0.55;
     const FADE_IN_MS = 1500;
+    const CLICK_WINDOW_MS = 350;
 
     const player = document.getElementById('recordPlayer');
     if (!player) return;
 
-    const audio = new Audio(AUDIO_SRC);
+    let currentIndex = 0;
+    const audio = new Audio(TRACKS[currentIndex]);
     audio.preload = 'auto';
     audio.volume = 0;
+    player.title = 'Play: ' + TRACK_NAMES[currentIndex];
 
     let fadeRAF = null;
     function fadeVolume(from, to, duration) {
@@ -956,9 +962,38 @@
       fadeRAF = requestAnimationFrame(step);
     }
 
+    function setPlaying(isPlaying) {
+      player.classList.toggle('playing', isPlaying);
+      player.setAttribute('aria-pressed', String(isPlaying));
+    }
+
     function startPlayback() {
       audio.volume = 0;
       audio.play().then(() => fadeVolume(0, TARGET_VOLUME, FADE_IN_MS)).catch(() => {});
+    }
+
+    function pausePlayback() {
+      if (fadeRAF) cancelAnimationFrame(fadeRAF);
+      audio.pause();
+    }
+
+    function togglePlayPause() {
+      const isPlaying = !player.classList.contains('playing');
+      setPlaying(isPlaying);
+      if (isPlaying) startPlayback(); else pausePlayback();
+    }
+
+    function loadTrack(index) {
+      currentIndex = (index + TRACKS.length) % TRACKS.length;
+      audio.src = TRACKS[currentIndex];
+      audio.currentTime = 0;
+      player.title = 'Play: ' + TRACK_NAMES[currentIndex];
+    }
+
+    function changeTrack(direction) {
+      loadTrack(currentIndex + direction);
+      setPlaying(true);
+      startPlayback();
     }
 
     audio.addEventListener('ended', () => {
@@ -966,15 +1001,17 @@
       startPlayback();
     });
 
+    let clickCount = 0;
+    let clickTimer = null;
     player.addEventListener('click', () => {
-      const isPlaying = player.classList.toggle('playing');
-      player.setAttribute('aria-pressed', String(isPlaying));
-      if (isPlaying) {
-        startPlayback();
-      } else {
-        if (fadeRAF) cancelAnimationFrame(fadeRAF);
-        audio.pause();
-      }
+      clickCount++;
+      if (clickTimer) clearTimeout(clickTimer);
+      clickTimer = setTimeout(() => {
+        if (clickCount === 1) togglePlayPause();
+        else if (clickCount === 2) changeTrack(1);
+        else changeTrack(-1);
+        clickCount = 0;
+      }, CLICK_WINDOW_MS);
     });
   })();
 </script>
