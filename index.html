@@ -717,6 +717,34 @@
         </div>
       </article>
 
+      <article class="work-card">
+        <div class="work-card-top">
+          <div class="work-title-row">
+            <div class="work-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+            </div>
+            <div class="work-title">BossEngine</div>
+          </div>
+          <div class="badge-row"><span class="badge badge-outline">In Development</span></div>
+        </div>
+        <p class="work-desc">A self-contained custom creature/boss engine for Paper 1.21.11, built from scratch — no MythicMobs, no Model Engine. Rig a Blockbench model, wire up abilities and AI entirely through YAML or in-game GUIs, and fight it.</p>
+        <ul class="work-points">
+          <li><strong>Blockbench pipeline</strong> — a bbmodel importer bakes cuboids into vanilla resource-pack item models, converts every animation's keyframes automatically, and rebuilds a deployable resource pack with a built-in HTTP host, no external tooling</li>
+          <li><strong>Rendering</strong> — display-entity bone rigs with real parent → child forward kinematics, so a rotating limb actually carries its children with it, driven by a frame-accurate animation clock with timed event markers for hit-frame-synced combat</li>
+          <li><strong>Abilities</strong> — data-driven YAML abilities across 4 hitbox shapes (sphere/box/line/cone), 5 movement types (dash, leap, teleport, retreat, none), homing projectiles, potion/heal/ignite/launch effects, and ground telegraphs, all timed off the animation clock</li>
+          <li><strong>AI</strong> — utility-style decision-making: a composable condition system (distance, health%, line-of-sight, target fleeing/blocking/healing, phase, random chance, AND/OR nesting) gates a weighted-random ability picker, on top of aggressive/neutral/friendly personalities</li>
+          <li><strong>Bosses</strong> — health-threshold phases that swap ability sets and speed, synced boss bars, lockable arenas with win/fail/exit handling, configurable loot tables, and a full Bukkit event API (spawn/death/phase-change/ability-start/ability-hit/target-change) for other plugins to hook into</li>
+          <li><strong>Pets</strong> — friendly creatures can be owned by a player: follow/stay toggled by right-click, automatic aggro in the owner's defense when they're attacked nearby</li>
+          <li><strong>In-game editors</strong> — a model preview GUI plus full ability and boss/phase builders (hitboxes, conditions, movement, telegraphs, phases, ability toggles) with anvil-based text entry, no config file required</li>
+        </ul>
+        <div class="tag-row">
+          <span class="tag">JAVA</span>
+          <span class="tag">PAPER API</span>
+          <span class="tag">DISPLAY ENTITIES</span>
+          <span class="tag">RESOURCE PACKS</span>
+        </div>
+      </article>
+
     </div>
   </div>
 </section>
