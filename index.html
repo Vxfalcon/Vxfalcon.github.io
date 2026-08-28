@@ -288,6 +288,37 @@
 
   /* ── Work cards ── */
   .work-grid { display: grid; grid-template-columns: 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); }
+  .work-card[data-page="2"] { display: none; }
+
+  .work-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    margin-top: 1.75rem;
+  }
+  .page-btn {
+    width: 34px; height: 34px;
+    display: flex; align-items: center; justify-content: center;
+    border: 1px solid var(--border2);
+    background: transparent;
+    color: var(--text);
+    font-size: 15px;
+    font-family: var(--mono);
+    cursor: pointer;
+    border-radius: var(--radius);
+    transition: background .15s ease, color .15s ease, opacity .15s ease;
+  }
+  .page-btn:hover:not(:disabled) { background: var(--white); color: #000; }
+  .page-btn:disabled { opacity: .3; cursor: default; }
+  .page-indicator {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    letter-spacing: .05em;
+    color: var(--text2);
+    font-variant-numeric: tabular-nums;
+  }
+  .page-indicator .cur { color: var(--white); font-weight: 700; }
   .work-card { background: var(--bg); padding: 2rem; transition: background .18s ease; }
   .work-card:hover { background: var(--surface2); }
   .work-card-top {
@@ -577,7 +608,7 @@
 
     <div class="work-grid reveal">
 
-      <article class="work-card">
+      <article class="work-card" data-page="1">
         <div class="work-card-top">
           <div class="work-title-row">
             <div class="work-icon">
@@ -604,7 +635,7 @@
         </a>
       </article>
 
-      <article class="work-card">
+      <article class="work-card" data-page="1">
         <div class="work-card-top">
           <div class="work-title-row">
             <div class="work-icon">
@@ -635,7 +666,7 @@
         </div>
       </article>
 
-      <article class="work-card">
+      <article class="work-card" data-page="1">
         <div class="work-card-top">
           <div class="work-title-row">
             <div class="work-icon">
@@ -667,7 +698,7 @@
         </div>
       </article>
 
-      <article class="work-card">
+      <article class="work-card" data-page="2">
         <div class="work-card-top">
           <div class="work-title-row">
             <div class="work-icon">
@@ -692,7 +723,7 @@
         </div>
       </article>
 
-      <article class="work-card">
+      <article class="work-card" data-page="2">
         <div class="work-card-top">
           <div class="work-title-row">
             <div class="work-icon">
@@ -717,7 +748,7 @@
         </div>
       </article>
 
-      <article class="work-card">
+      <article class="work-card" data-page="2">
         <div class="work-card-top">
           <div class="work-title-row">
             <div class="work-icon">
@@ -745,6 +776,12 @@
         </div>
       </article>
 
+    </div>
+
+    <div class="work-pagination reveal">
+      <button class="page-btn" id="workPrev" type="button" aria-label="Previous page">‹</button>
+      <span class="page-indicator"><span class="cur" id="workPageCur">01</span> / <span id="workPageTotal">02</span></span>
+      <button class="page-btn" id="workNext" type="button" aria-label="Next page">›</button>
     </div>
   </div>
 </section>
@@ -841,6 +878,43 @@
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in-view'); });
   }, { threshold: 0.1 });
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // Work section pagination — 3 project cards per page, driven entirely by
+  // each card's data-page attribute so adding a page is just adding cards.
+  (function workPagination() {
+    const cards = Array.from(document.querySelectorAll('.work-card[data-page]'));
+    const prevBtn = document.getElementById('workPrev');
+    const nextBtn = document.getElementById('workNext');
+    const curEl = document.getElementById('workPageCur');
+    const totalEl = document.getElementById('workPageTotal');
+    if (!cards.length || !prevBtn || !nextBtn) return;
+
+    const totalPages = Math.max(...cards.map(c => parseInt(c.dataset.page, 10)));
+    let page = 1;
+
+    function render() {
+      cards.forEach(c => {
+        // A literal 'none'/'block' (not '') because a stylesheet rule hides
+        // page>1 cards by default; an empty string only clears any inline
+        // override and falls back to that same stylesheet rule, so it can
+        // never turn a hidden card back on.
+        c.style.display = parseInt(c.dataset.page, 10) === page ? 'block' : 'none';
+      });
+      curEl.textContent = String(page).padStart(2, '0');
+      totalEl.textContent = String(totalPages).padStart(2, '0');
+      prevBtn.disabled = page === 1;
+      nextBtn.disabled = page === totalPages;
+    }
+
+    prevBtn.addEventListener('click', () => {
+      if (page > 1) { page -= 1; render(); }
+    });
+    nextBtn.addEventListener('click', () => {
+      if (page < totalPages) { page += 1; render(); }
+    });
+
+    render();
+  })();
 
   // Discord username — no stable public profile URL to link to, so copy
   // it to the clipboard instead and flash a toast confirming it.
