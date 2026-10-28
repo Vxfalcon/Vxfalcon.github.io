@@ -18,4 +18,4 @@ The Constellations SMP showcase uses a compressed 720p H.264/AAC MP4 with a JPEG
 
 Obsidian Anticheat has its own project section at `#obsidian`, with the supplied 25-second H.264/AAC trailer and a poster extracted from it. It uses native controls, inline playback and `preload="none"`, with no autoplay or third-party video embed.
 
-Ghastly is listed at `#ghastly`, with an actual menu preview. Its source is kept in a private repository; this site publishes only the project description and screenshot.
+Ghastly is listed at `#ghastly`, with the supplied 25-second, 720p H.264/AAC showcase video (about 9.1 MB) and a poster extracted from that video. It uses native controls, inline playback and `preload="none"`. Its source stays in a private repository; this site publishes the description and showcase video.
